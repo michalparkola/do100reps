@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { supabase } from "../app/supabase";
 
 export default function PracticeView() {
   const [nextRep, setNextRep] = React.useState<number>(1);
@@ -20,7 +21,7 @@ export default function PracticeView() {
   );
 
   React.useEffect(() => {
-    getAllFromAsyncStorage();
+    getAllFromSupabase();
   }, []);
 
   function lightUpGrid() {
@@ -47,25 +48,22 @@ export default function PracticeView() {
 
   React.useEffect(lightUpGrid, [nextRep]);
 
-  async function getAllFromAsyncStorage() {
+  async function getAllFromSupabase() {
     try {
-      const keys = await AsyncStorage.getAllKeys();
-      const data = await AsyncStorage.multiGet(keys);
+      const { data } = await supabase
+        .from("Reps")
+        .select()
+        .eq("practice", "Running")
+        .order("created_at", { ascending: true });
 
-      let tmp: any = [];
-
-      data.forEach(([key, value]) => {
-        if (key === "nextRep") {
-          setNextRep(Number(value));
-        } else if (value != null) {
-          tmp.push({ repNumber: key, repText: value });
+      if (data) {
+        setNextRep(data.length + 1);
+        let tmp: Array<{ repNumber: number; repText: string }> = [];
+        for (let rep in data) {
+          tmp.push({ repNumber: Number(rep) + 1, repText: data[rep].summary });
         }
-      });
-      tmp.sort(
-        (a: { repNumber: string }, b: { repNumber: string }) =>
-          Number(b.repNumber) - Number(a.repNumber)
-      );
-      setReps(tmp);
+        setReps(tmp.reverse());
+      }
     } catch (error) {
       console.error(error);
     }
@@ -73,8 +71,9 @@ export default function PracticeView() {
 
   async function goToNextRep() {
     try {
-      await AsyncStorage.setItem(nextRep.toString(), nextRepText);
-      await AsyncStorage.setItem("nextRep", (nextRep + 1).toString());
+      await supabase
+        .from("Reps")
+        .insert({ summary: nextRepText, practice: "Running" });
 
       setReps((prevReps) => [
         { repNumber: nextRep.toString(), repText: nextRepText },
@@ -138,13 +137,16 @@ export default function PracticeView() {
       </View>
 
       <Text style={{ fontSize: 16, marginLeft: 12, marginTop: 12 }}>
-        Describe your plan, the result and your reflections.
+        Describe the result of the next rep:
       </Text>
 
       <TextInput
         style={{
           height: 150,
-          margin: 12,
+          marginRight: 12,
+          marginLeft: 12,
+          marginTop: 12,
+          marginBottom: 6,
           borderWidth: 1,
           borderColor: "lightgray",
           padding: 10,
@@ -154,7 +156,7 @@ export default function PracticeView() {
         value={nextRepText}
       />
 
-      <View style={{ marginBottom: 12, marginLeft: 12 }}>
+      <View style={{ marginRight: 12, marginLeft: 12, marginBottom: 12 }}>
         <Button
           onPress={goToNextRep}
           title="Close Rep"
@@ -163,7 +165,7 @@ export default function PracticeView() {
       </View>
 
       <FlatList
-        style={{ marginLeft: 12 }}
+        style={{ marginLeft: 12, marginRight: 12 }}
         data={reps}
         keyExtractor={(item) => item.repNumber}
         renderItem={({ item }) => (
@@ -171,12 +173,8 @@ export default function PracticeView() {
             style={{
               backgroundColor: "#fff",
               borderRadius: 5,
-              padding: 10,
-              marginBottom: 10,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.8,
-              shadowRadius: 2,
+              padding: 12,
+              marginBottom: 12,
               elevation: 5,
             }}
           >

@@ -2,7 +2,7 @@ import React from "react";
 import "react-native-url-polyfill/auto";
 import PracticeView from "../components/PracticeView";
 import { supabase } from "./supabase";
-import { Session } from "@supabase/supabase-js";
+import { Session, SupabaseClient } from "@supabase/supabase-js";
 import Auth from "../components/Auth";
 
 export default function Index() {
