@@ -1,9 +1,10 @@
 import React from "react";
 import "react-native-url-polyfill/auto";
-import PracticeView from "../components/PracticeView";
-import { supabase } from "./supabase";
-import { Session, SupabaseClient } from "@supabase/supabase-js";
-import Auth from "../components/Auth";
+
+import { supabase } from "@/helpers/supabase";
+import { Session } from "@supabase/supabase-js";
+import Auth from "@/components/Auth";
+import PracticeList from "@/components/PracticeList";
 
 export default function Index() {
   const [session, setSession] = React.useState<Session | null>(null);
@@ -19,5 +20,10 @@ export default function Index() {
   }, []);
 
   if (!session) return <Auth />;
-  else return <PracticeView />;
+  else
+    return (
+      <>
+        <PracticeList />
+      </>
+    );
 }

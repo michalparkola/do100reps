@@ -9,61 +9,59 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { supabase } from "../app/supabase";
+import PracticeGrid from "@/components/PracticeGrid";
+import { supabase } from "@/helpers/supabase";
 
-export default function PracticeView() {
+interface Props {
+  practiceId?: string;
+}
+
+export default function PracticeView({ practiceId }: Props) {
+  // TODO check if valid practiceId
+
+  const [isLoading, setIsLoading] = React.useState(true);
   const [nextRep, setNextRep] = React.useState<number>(1);
   const [nextRepText, setNextRepText] = React.useState("");
+  const [practice, setPractice] = React.useState<any>(null);
   const [reps, setReps] = React.useState<any[]>([]);
-  const [repsGrid, setRepsGrid] = React.useState(
-    Array(10).fill(Array(10).fill(false))
-  );
 
   React.useEffect(() => {
-    getAllFromSupabase();
+    getRepsFromSupabase();
   }, []);
 
-  function lightUpGrid() {
-    console.log("LightUpGrid, nextRep = ", nextRep);
-    let newRepsGrid = Array.from({ length: 10 }, () => Array(10).fill(false));
-
-    let repsDone = nextRep - 1;
-    let nextRow = 0;
-
-    while (repsDone >= 10) {
-      newRepsGrid[nextRow] = Array(10).fill(true);
-      nextRow += 1;
-      repsDone -= 10;
-    }
-
-    let nextCol = 0;
-    while (repsDone > 0) {
-      newRepsGrid[nextRow][nextCol] = true;
-      nextCol += 1;
-      repsDone -= 1;
-    }
-    setRepsGrid(newRepsGrid);
-  }
-
-  React.useEffect(lightUpGrid, [nextRep]);
-
-  async function getAllFromSupabase() {
+  async function getRepsFromSupabase() {
     try {
-      const { data } = await supabase
+      const practicePromise = await supabase
+        .from("Practices")
+        .select()
+        .eq("id", practiceId);
+
+      let practiceName = null;
+      if (practicePromise.data) {
+        setPractice(practicePromise.data[0]);
+        console.log(practice);
+        practiceName = practicePromise.data[0].name;
+      }
+
+      const repsPromise = await supabase
         .from("Reps")
         .select()
-        .eq("practice", "Running")
+        .eq("practice", practiceName)
         .order("created_at", { ascending: true });
 
-      if (data) {
-        setNextRep(data.length + 1);
+      if (repsPromise.data) {
+        setNextRep(repsPromise.data.length + 1);
         let tmp: Array<{ repNumber: number; repText: string }> = [];
-        for (let rep in data) {
-          tmp.push({ repNumber: Number(rep) + 1, repText: data[rep].summary });
+        for (let rep in repsPromise.data) {
+          tmp.push({
+            repNumber: Number(rep) + 1,
+            repText: repsPromise.data[rep].summary,
+          });
         }
         setReps(tmp.reverse());
       }
+
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -73,7 +71,12 @@ export default function PracticeView() {
     try {
       await supabase
         .from("Reps")
-        .insert({ summary: nextRepText, practice: "Running" });
+        .insert({ summary: nextRepText, practice: practice.name });
+
+      await supabase
+        .from("Practices")
+        .update({ do100reps_count: nextRep })
+        .eq("id", practice.id);
 
       setReps((prevReps) => [
         { repNumber: nextRep.toString(), repText: nextRepText },
@@ -88,21 +91,7 @@ export default function PracticeView() {
     }
   }
 
-  const renderRepGridItem = ({ item }: { item: Array<[boolean, string]> }) => (
-    <View style={{ flexDirection: "row" }}>
-      {item.map((isCompleted, index) => (
-        <View
-          key={index}
-          style={{
-            width: 10,
-            height: 10,
-            backgroundColor: isCompleted ? "green" : "gray",
-            margin: 1,
-          }}
-        />
-      ))}
-    </View>
-  );
+  if (isLoading) return <Text>Loading...</Text>;
 
   return (
     <ScrollView
@@ -118,18 +107,12 @@ export default function PracticeView() {
           marginBottom: 12,
         }}
       >
-        Complete 100 runs to improve my heart health
+        {practice.do100reps_title}
       </Text>
 
       <View style={{ flexDirection: "row" }}>
-        <View>
-          <FlatList
-            style={{ marginLeft: 12 }}
-            data={repsGrid}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={renderRepGridItem}
-            scrollEnabled={false}
-          />
+        <View style={{ marginLeft: 12 }}>
+          <PracticeGrid nextRep={nextRep} size={10} />
         </View>
         <Text style={{ fontSize: 32, marginLeft: 12 }}>
           Next rep {nextRep.toString()}/100
