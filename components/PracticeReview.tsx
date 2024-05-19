@@ -13,10 +13,11 @@ import PracticeGrid from "@/components/PracticeGrid";
 import { supabase } from "@/helpers/supabase";
 
 interface Props {
-  practiceId?: string;
+  userId: string;
+  practiceId: string;
 }
 
-export default function PracticeView({ practiceId }: Props) {
+export default function PracticeReview({ userId, practiceId }: Props) {
   // TODO check if valid practiceId
 
   const [isLoading, setIsLoading] = React.useState(true);
@@ -34,6 +35,7 @@ export default function PracticeView({ practiceId }: Props) {
       const practicePromise = await supabase
         .from("Practices")
         .select()
+        .eq("user_id", userId)
         .eq("id", practiceId);
 
       let practiceName = null;
@@ -47,6 +49,7 @@ export default function PracticeView({ practiceId }: Props) {
         .from("Reps")
         .select()
         .eq("practice", practiceName)
+        .eq("user_id", userId)
         .order("created_at", { ascending: true });
 
       if (repsPromise.data) {
@@ -64,30 +67,6 @@ export default function PracticeView({ practiceId }: Props) {
       setIsLoading(false);
     } catch (error) {
       console.error(error);
-    }
-  }
-
-  async function goToNextRep() {
-    try {
-      await supabase
-        .from("Reps")
-        .insert({ summary: nextRepText, practice: practice.name });
-
-      await supabase
-        .from("Practices")
-        .update({ do100reps_count: nextRep })
-        .eq("id", practice.id);
-
-      setReps((prevReps) => [
-        { repNumber: nextRep.toString(), repText: nextRepText },
-        ...prevReps,
-      ]);
-
-      setNextRep(nextRep + 1);
-      setNextRepText("");
-      Keyboard.dismiss();
-    } catch (e) {
-      console.log("Next rep saving error", e);
     }
   }
 
@@ -117,34 +96,6 @@ export default function PracticeView({ practiceId }: Props) {
         <Text style={{ fontSize: 32, marginLeft: 12 }}>
           Next rep {nextRep.toString()}/100
         </Text>
-      </View>
-
-      <Text style={{ fontSize: 16, marginLeft: 12, marginTop: 12 }}>
-        Describe the result of the next rep:
-      </Text>
-
-      <TextInput
-        style={{
-          height: 150,
-          marginRight: 12,
-          marginLeft: 12,
-          marginTop: 12,
-          marginBottom: 6,
-          borderWidth: 1,
-          borderColor: "lightgray",
-          padding: 10,
-        }}
-        multiline
-        onChangeText={setNextRepText}
-        value={nextRepText}
-      />
-
-      <View style={{ marginRight: 12, marginLeft: 12 }}>
-        <Button
-          onPress={goToNextRep}
-          title="Close Rep"
-          accessibilityLabel="Close the rep and open the next one."
-        />
       </View>
 
       <FlatList

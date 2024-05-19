@@ -9,7 +9,7 @@ export default function Practice() {
     <View>
       <Stack.Screen
         options={{
-          title: "Practice",
+          title: "Continue Practice",
         }}
       />
       <PracticeView practiceId={id} />

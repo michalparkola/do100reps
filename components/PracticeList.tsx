@@ -41,7 +41,7 @@ export default function PracticeList() {
               padding: 12,
               marginBottom: 12,
               elevation: 5,
-              width: 360,
+              width: "100%",
             }}
           >
             <View style={{ marginRight: 5 }}>
