@@ -94,84 +94,74 @@ export default function PracticeView({ practiceId }: Props) {
   if (isLoading) return <Text>Loading...</Text>;
 
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 40,
-          fontWeight: "bold",
-          marginLeft: 12,
-          marginBottom: 12,
-        }}
-      >
-        {practice.do100reps_title}
-      </Text>
-
-      <View style={{ flexDirection: "row" }}>
-        <View style={{ marginLeft: 12 }}>
-          <PracticeGrid nextRep={nextRep} size={10} />
-        </View>
-        <Text style={{ fontSize: 32, marginLeft: 12 }}>
-          Next rep {nextRep.toString()}/100
-        </Text>
-      </View>
-
-      <Text style={{ fontSize: 16, marginLeft: 12, marginTop: 12 }}>
-        Describe the result of the next rep:
-      </Text>
-
-      <TextInput
-        style={{
-          height: 150,
-          marginRight: 12,
-          marginLeft: 12,
-          marginTop: 12,
-          marginBottom: 6,
-          borderWidth: 1,
-          borderColor: "lightgray",
-          padding: 10,
-        }}
-        multiline
-        onChangeText={setNextRepText}
-        value={nextRepText}
-      />
-
-      <View style={{ marginRight: 12, marginLeft: 12 }}>
-        <Button
-          onPress={goToNextRep}
-          title="Close Rep"
-          color="lightgreen"
-          accessibilityLabel="Close the rep and open the next one."
-        />
-      </View>
-
-      <FlatList
-        style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
-        data={reps}
-        keyExtractor={(item) => item.repNumber}
-        renderItem={({ item }) => (
-          <View
+    <FlatList
+      style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
+      data={reps}
+      keyExtractor={(item) => item.repNumber}
+      ListHeaderComponent={() => (
+        <View style={{ marginBottom: 12 }}>
+          <Text
             style={{
-              backgroundColor: "#fff",
-              borderRadius: 5,
-              padding: 12,
+              fontSize: 40,
+              fontWeight: "bold",
               marginBottom: 12,
-              elevation: 5,
             }}
           >
-            <Text
-              style={{
-                fontSize: 16,
-              }}
-            >
-              Rep {item.repNumber}: {item.repText}
+            {practice.do100reps_title}
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <View>
+              <PracticeGrid nextRep={nextRep} size={10} />
+            </View>
+            <Text style={{ fontSize: 32, marginLeft: 12 }}>
+              Next rep {nextRep.toString()}/100
             </Text>
           </View>
-        )}
-      />
-    </ScrollView>
+          <Text style={{ fontSize: 16, marginTop: 12 }}>
+            Describe the result of the next rep:
+          </Text>
+          <TextInput
+            style={{
+              height: 150,
+              marginTop: 12,
+              marginBottom: 6,
+              borderWidth: 1,
+              borderColor: "lightgray",
+              padding: 10,
+            }}
+            multiline
+            onChangeText={setNextRepText}
+            value={nextRepText}
+          />
+          <View>
+            <Button
+              onPress={goToNextRep}
+              title="Close Rep"
+              color="lightgreen"
+              accessibilityLabel="Close the rep and open the next one."
+            />
+          </View>
+        </View>
+      )}
+      renderItem={({ item }) => (
+        <View
+          style={{
+            backgroundColor: "#fff",
+            borderRadius: 5,
+            padding: 12,
+            marginBottom: 12,
+            elevation: 5,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+            }}
+          >
+            Rep {item.repNumber}: {item.repText}
+          </Text>
+        </View>
+      )}
+    />
   );
 }
