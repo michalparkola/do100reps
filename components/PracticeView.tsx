@@ -70,8 +70,8 @@ export default function PracticeView({ practiceId }: Props) {
           .reverse();
 
         setReps(reps);
+        setNextRep(reps.length + 1);
       }
-      setNextRep(reps.length + 1);
       setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -109,7 +109,7 @@ export default function PracticeView({ practiceId }: Props) {
       style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
       data={reps}
       keyExtractor={(item) => item.repNumber}
-      ListHeaderComponent={() => (
+      ListHeaderComponent={
         <View style={{ marginBottom: 12 }}>
           <Text
             style={{
@@ -153,7 +153,7 @@ export default function PracticeView({ practiceId }: Props) {
             />
           </View>
         </View>
-      )}
+      }
       renderItem={({ item }) => (
         <View
           style={{
