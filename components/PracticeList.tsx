@@ -16,6 +16,7 @@ export default function PracticeList() {
       const { data } = await supabase
         .from("Practices")
         .select()
+        // .eq("user_id", )
         .not("do100reps_title", "is", null);
 
       if (data) {
