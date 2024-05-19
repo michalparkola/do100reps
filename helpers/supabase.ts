@@ -27,3 +27,12 @@ AppState.addEventListener('change', (state) => {
     supabase.auth.stopAutoRefresh()
   }
 })
+
+export const handleLogout = async () => {
+  if (!supabase) {
+    console.error("Supabase context is null");
+    return;
+  }
+  const { error } = await supabase.auth.signOut();
+  if (error) console.error("Error logging out:", error.message);
+};

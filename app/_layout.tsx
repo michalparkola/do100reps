@@ -1,33 +1,31 @@
 import { Stack } from "expo-router";
 import { Text, Pressable } from "react-native";
-import { supabase } from "@/helpers/supabase";
+import { handleLogout } from "@/helpers/supabase";
+import { HeaderButtonProps } from "@react-navigation/native-stack/lib/typescript/src/types";
 
 export const unstable_settings = {
   // Ensure any route can link back to `/`
   initialRouteName: "index",
 };
 
-const handleLogout = async () => {
-  if (!supabase) {
-    console.error("Supabase context is null");
-    return;
-  }
-  const { error } = await supabase.auth.signOut();
-  if (error) console.error("Error logging out:", error.message);
-};
-
 export default function RootLayout() {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerStyle: { backgroundColor: "lightgreen" },
+        headerRight: (props: HeaderButtonProps) => {
+          return (
+            <Pressable onPress={handleLogout}>
+              <Text style={{ marginRight: 12 }}>Logout</Text>
+            </Pressable>
+          );
+        },
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{
           title: "Do 100 reps",
-          headerRight: () => (
-            <Pressable onPress={handleLogout}>
-              <Text style={{ marginRight: 12 }}>Logout ({})</Text>
-            </Pressable>
-          ),
         }}
       />
     </Stack>

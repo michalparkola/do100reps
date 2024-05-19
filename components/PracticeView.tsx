@@ -143,6 +143,7 @@ export default function PracticeView({ practiceId }: Props) {
         <Button
           onPress={goToNextRep}
           title="Close Rep"
+          color="lightgreen"
           accessibilityLabel="Close the rep and open the next one."
         />
       </View>

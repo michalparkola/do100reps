@@ -38,7 +38,7 @@ export default function PracticeGrid({ nextRep, size }: Props) {
           style={{
             width: size,
             height: size,
-            backgroundColor: isCompleted ? "green" : "gray",
+            backgroundColor: isCompleted ? "lightgreen" : "lightgray",
             margin: size >= 10 ? 1 : 0,
           }}
         />
