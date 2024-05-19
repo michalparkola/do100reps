@@ -13,10 +13,18 @@ export default function PracticeList() {
 
   async function getPracticesFromSupabase() {
     try {
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+      let userId = null;
+      if (userData && userData.user && !userError) {
+        userId = userData.user.id;
+      } else throw userError;
+
       const { data } = await supabase
         .from("Practices")
         .select()
-        // .eq("user_id", )
+        .eq("user_id", userId)
         .not("do100reps_title", "is", null);
 
       if (data) {

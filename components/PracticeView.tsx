@@ -31,36 +31,47 @@ export default function PracticeView({ practiceId }: Props) {
 
   async function getRepsFromSupabase() {
     try {
-      const practicePromise = await supabase
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+      let userId = null;
+      if (userData && userData.user && !userError) {
+        userId = userData.user.id;
+      } else throw userError;
+
+      const { data: practiceData, error: practiceError } = await supabase
         .from("Practices")
         .select()
+        .eq("user_id", userId)
         .eq("id", practiceId);
 
       let practiceName = null;
-      if (practicePromise.data) {
-        setPractice(practicePromise.data[0]);
-        console.log(practice);
-        practiceName = practicePromise.data[0].name;
+      if (practiceData) {
+        setPractice(practiceData[0]);
+        practiceName = practiceData[0].name;
       }
 
-      const repsPromise = await supabase
+      const { data: repsData, error: repsError } = await supabase
         .from("Reps")
         .select()
         .eq("practice", practiceName)
         .order("created_at", { ascending: true });
 
-      if (repsPromise.data) {
-        setNextRep(repsPromise.data.length + 1);
-        let tmp: Array<{ repNumber: number; repText: string }> = [];
-        for (let rep in repsPromise.data) {
-          tmp.push({
-            repNumber: Number(rep) + 1,
-            repText: repsPromise.data[rep].summary,
-          });
-        }
-        setReps(tmp.reverse());
-      }
+      if (practiceError) throw practiceError;
+      if (repsError) throw repsError;
+      if (userError) throw userError;
 
+      if (repsData) {
+        const reps = repsData
+          .map((rep, index) => ({
+            repNumber: index + 1,
+            repText: rep.summary,
+          }))
+          .reverse();
+
+        setReps(reps);
+      }
+      setNextRep(reps.length + 1);
       setIsLoading(false);
     } catch (error) {
       console.error(error);
