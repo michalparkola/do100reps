@@ -1,4 +1,4 @@
-import PracticeReview from "@/components/PracticeReview";
+import PracticeReview from "@/components/PracticeReView";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { View, Text } from "react-native";
 

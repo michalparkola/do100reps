@@ -1,6 +1,5 @@
-import PracticeView from "@/components/PracticeView";
 import { useLocalSearchParams, Stack } from "expo-router";
-import { View, Text } from "react-native";
+import PracticeView from "@/components/PracticeView";
 
 export default function Practice() {
   const { id } = useLocalSearchParams<{ id: string }>();
