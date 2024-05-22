@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   TextInput,
   Button,
   FlatList,
   Keyboard,
-  ScrollView,
+  Pressable,
 } from "react-native";
 import PracticeGrid from "@/components/PracticeGrid";
 import { supabase } from "@/helpers/supabase";
@@ -19,11 +18,13 @@ interface Props {
 export default function PracticeView({ practiceId }: Props) {
   // TODO check if valid practiceId
 
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [nextRep, setNextRep] = React.useState<number>(1);
-  const [nextRepText, setNextRepText] = React.useState("");
-  const [practice, setPractice] = React.useState<any>(null);
-  const [reps, setReps] = React.useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [nextRep, setNextRep] = useState<number>(1);
+  const [nextRepText, setNextRepText] = useState("");
+  const [practice, setPractice] = useState<any>(null);
+  const [reps, setReps] = useState<any[]>([]);
+  const [isEditingPracticeTitle, setIsEditingPracticeTitle] = useState(false);
+  const [practiceTitle, setPracticeTitle] = useState("Practice Title");
 
   React.useEffect(() => {
     getRepsFromSupabase();
@@ -49,6 +50,7 @@ export default function PracticeView({ practiceId }: Props) {
       if (practiceData) {
         setPractice(practiceData[0]);
         practiceName = practiceData[0].name;
+        setPracticeTitle(practiceData[0].do100reps_title);
       }
 
       const { data: repsData, error: repsError } = await supabase
@@ -78,7 +80,18 @@ export default function PracticeView({ practiceId }: Props) {
     }
   }
 
-  async function goToNextRep() {
+  async function savePracticeTitle() {
+    try {
+      await supabase
+        .from("Practices")
+        .update({ do100reps_title: practiceTitle })
+        .eq("id", practice.id);
+    } catch (e) {
+      console.log("Error saving practice title :(", e);
+    }
+  }
+
+  async function saveNextRep() {
     try {
       await supabase
         .from("Reps")
@@ -98,7 +111,7 @@ export default function PracticeView({ practiceId }: Props) {
       setNextRepText("");
       Keyboard.dismiss();
     } catch (e) {
-      console.log("Next rep saving error", e);
+      console.log("Error saving the next rep :(", e);
     }
   }
 
@@ -111,15 +124,35 @@ export default function PracticeView({ practiceId }: Props) {
       keyExtractor={(item) => item.repNumber}
       ListHeaderComponent={
         <View style={{ marginBottom: 12 }}>
-          <Text
-            style={{
-              fontSize: 40,
-              fontWeight: "bold",
-              marginBottom: 12,
-            }}
-          >
-            {practice.do100reps_title}
-          </Text>
+          {isEditingPracticeTitle ? (
+            <TextInput
+              style={{
+                fontSize: 40,
+                fontWeight: "bold",
+                marginBottom: 12,
+              }}
+              value={practiceTitle}
+              onChangeText={setPracticeTitle}
+              onSubmitEditing={() => {
+                setIsEditingPracticeTitle(false);
+                savePracticeTitle();
+              }}
+              autoFocus={true}
+            />
+          ) : (
+            <Pressable onPress={() => setIsEditingPracticeTitle(true)}>
+              <Text
+                style={{
+                  fontSize: 40,
+                  fontWeight: "bold",
+                  marginBottom: 12,
+                }}
+              >
+                {practiceTitle}
+              </Text>
+            </Pressable>
+          )}
+
           <View style={{ flexDirection: "row" }}>
             <View>
               <PracticeGrid nextRep={nextRep} size={10} />
@@ -146,7 +179,7 @@ export default function PracticeView({ practiceId }: Props) {
           />
           <View>
             <Button
-              onPress={goToNextRep}
+              onPress={saveNextRep}
               title="Close Rep"
               color="lightgreen"
               accessibilityLabel="Close the rep and open the next one."
