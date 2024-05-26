@@ -105,7 +105,11 @@ export default function PracticeView({ practiceId }: Props) {
         .eq("id", practice.id);
 
       setReps((prevReps) => [
-        { repNumber: nextRep.toString(), repText: nextRepText },
+        {
+          repNumber: nextRep.toString(),
+          repText: nextRepText,
+          repDate: new Date().toISOString().split("T")[0],
+        },
         ...prevReps,
       ]);
 
