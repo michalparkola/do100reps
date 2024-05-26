@@ -41,7 +41,6 @@ export default function PracticeReview({ userId, practiceId }: Props) {
       let practiceName = null;
       if (practicePromise.data) {
         setPractice(practicePromise.data[0]);
-        console.log(practice);
         practiceName = practicePromise.data[0].name;
       }
 
@@ -106,8 +105,7 @@ export default function PracticeReview({ userId, practiceId }: Props) {
       <FlatList
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
         data={reps}
-        keyExtractor={(item) => item.repNumber}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View
             style={{
               backgroundColor: "#fff",
@@ -122,7 +120,7 @@ export default function PracticeReview({ userId, practiceId }: Props) {
                 fontSize: 16,
               }}
             >
-              Rep {item.repNumber} ({item.repDate}): {item.repText}
+              Rep {nextRep - 1 - index} ({item.repDate}): {item.repText}
             </Text>
           </View>
         )}

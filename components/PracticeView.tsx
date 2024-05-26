@@ -127,7 +127,6 @@ export default function PracticeView({ practiceId }: Props) {
     <FlatList
       style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
       data={reps}
-      keyExtractor={(item) => item.repNumber}
       ListHeaderComponent={
         <View style={{ marginBottom: 12 }}>
           {isEditingPracticeTitle ? (
@@ -193,7 +192,7 @@ export default function PracticeView({ practiceId }: Props) {
           </View>
         </View>
       }
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <View
           style={{
             backgroundColor: "#fff",
@@ -208,7 +207,7 @@ export default function PracticeView({ practiceId }: Props) {
               fontSize: 16,
             }}
           >
-            Rep {item.repNumber} ({item.repDate}): {item.repText}
+            Rep {nextRep - 1 - index} ({item.repDate}): {item.repText}
           </Text>
         </View>
       )}
