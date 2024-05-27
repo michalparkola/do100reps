@@ -53,19 +53,7 @@ export default function PracticeReview({ userId, practiceId }: Props) {
 
       if (repsPromise.data) {
         setNextRep(repsPromise.data.length + 1);
-        let tmp: Array<{
-          repNumber: number;
-          repText: string;
-          repDate: string;
-        }> = [];
-        for (let rep in repsPromise.data) {
-          tmp.push({
-            repNumber: Number(rep) + 1,
-            repText: repsPromise.data[rep].summary,
-            repDate: repsPromise.data[rep].created_at,
-          });
-        }
-        setReps(tmp.reverse());
+        setReps(repsPromise.data.reverse());
       }
 
       setIsLoading(false);
@@ -120,7 +108,7 @@ export default function PracticeReview({ userId, practiceId }: Props) {
                 fontSize: 16,
               }}
             >
-              Rep {nextRep - 1 - index} ({item.repDate}): {item.repText}
+              Rep {nextRep - 1 - index} ({item.created_at}): {item.summary}
             </Text>
           </View>
         )}
