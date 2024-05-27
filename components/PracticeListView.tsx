@@ -47,6 +47,8 @@ export default function PracticeList() {
   }
 
   async function createNewPractice() {
+    if (!newPracticeName || !newPracticeTitle) return;
+
     const { error } = await supabase
       .from("Practices")
       .insert({ name: newPracticeName, do100reps_title: newPracticeTitle });
@@ -63,7 +65,7 @@ export default function PracticeList() {
   }
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Pressable
         style={{
           marginLeft: 24,

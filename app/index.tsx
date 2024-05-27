@@ -20,10 +20,5 @@ export default function Index() {
   }, []);
 
   if (!session) return <Auth />;
-  else
-    return (
-      <>
-        <PracticeList />
-      </>
-    );
+  else return <PracticeList />;
 }
