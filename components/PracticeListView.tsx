@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import {
   View,
   Text,
-  FlatList,
+  SectionList,
   Pressable,
   Modal,
   TextInput,
@@ -39,7 +39,21 @@ export default function PracticeList() {
         .not("do100reps_title", "is", null);
 
       if (data) {
-        setPractices(data);
+        const groupedPractices = data.reduce((groups, practice) => {
+          const category = practice.category;
+          if (!groups[category]) {
+            groups[category] = [];
+          }
+          groups[category].push(practice);
+          return groups;
+        }, {});
+
+        // Convert object to array of sections
+        const sections = Object.keys(groupedPractices).map((category) => ({
+          title: category,
+          data: groupedPractices[category],
+        }));
+        setPractices(sections);
       }
     } catch (error) {
       console.error(error);
@@ -66,21 +80,9 @@ export default function PracticeList() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Pressable
-        style={{
-          marginLeft: 24,
-          marginRight: 12,
-          marginTop: 12,
-        }}
-        onPress={() => {
-          setModalVisible(true);
-        }}
-      >
-        <Text>Add Practice</Text>
-      </Pressable>
-      <FlatList
+      <SectionList
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
-        data={practices}
+        sections={practices}
         keyExtractor={(item) => item.do100reps_title}
         renderItem={({ item }) => (
           <Link href={"/practice/" + item.id}>
@@ -114,6 +116,11 @@ export default function PracticeList() {
               </View>
             </View>
           </Link>
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={{ margin: 12, fontWeight: "bold" }}>
+            {title != "null" ? title : ""}
+          </Text>
         )}
       />
       <Modal
@@ -161,6 +168,17 @@ export default function PracticeList() {
           </View>
         </View>
       </Modal>
+      <Pressable
+        style={{
+          margin: 12,
+          alignItems: "flex-end",
+        }}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <Text>Add Practice</Text>
+      </Pressable>
     </View>
   );
 }
