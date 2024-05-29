@@ -185,9 +185,9 @@ export default function PracticeView({ practiceId }: Props) {
           <View>
             <Button
               onPress={saveNextRep}
-              title="Close Rep"
+              title="Save Rep"
               color="lightgreen"
-              accessibilityLabel="Close the rep and open the next one."
+              accessibilityLabel="Save the rep and prepare for the next one."
             />
           </View>
         </View>
