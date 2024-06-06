@@ -194,7 +194,7 @@ export default function PracticeView({ practiceId }: Props) {
             elevation: 5,
           }}
         >
-          <Link href={"/rep/"}>
+          <Link href={"/rep/123"}>
             <Text
               style={{
                 fontSize: 16,

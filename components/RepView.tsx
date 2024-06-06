@@ -1,3 +1,5 @@
+import { Text } from "react-native";
+
 export default function RepView() {
-  return <div>Rep view</div>;
+  return <Text>Rep view</Text>;
 }
