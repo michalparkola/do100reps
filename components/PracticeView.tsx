@@ -8,6 +8,7 @@ import {
   Keyboard,
   Pressable,
 } from "react-native";
+import { Link } from "expo-router";
 import PracticeGrid from "@/components/PracticeGrid";
 import { supabase } from "@/helpers/supabase";
 
@@ -202,13 +203,15 @@ export default function PracticeView({ practiceId }: Props) {
             elevation: 5,
           }}
         >
-          <Text
-            style={{
-              fontSize: 16,
-            }}
-          >
-            Rep {nextRep - 1 - index} ({item.repDate}): {item.repText}
-          </Text>
+          <Link href={"/rep/"}>
+            <Text
+              style={{
+                fontSize: 16,
+              }}
+            >
+              Rep {nextRep - 1 - index} ({item.repDate}): {item.repText}
+            </Text>
+          </Link>
         </View>
       )}
     />
