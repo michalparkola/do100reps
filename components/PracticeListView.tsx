@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  SectionList,
-  Pressable,
-  Modal,
-  TextInput,
-} from "react-native";
+import { View, Text, SectionList } from "react-native";
 import { Link } from "expo-router";
 import { supabase } from "@/helpers/supabase";
 import PracticeGrid from "@/components/PracticeGrid";
