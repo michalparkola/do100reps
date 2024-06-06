@@ -1,6 +1,6 @@
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useState, useEffect } from "react";
-import { Text } from "react-native";
+import { Text, Keyboard } from "react-native";
 import { supabase } from "@/helpers/supabase";
 import RepView from "@/components/RepView";
 
@@ -8,6 +8,7 @@ interface Rep {
   id: string;
   user_id: string;
   summary: string;
+  created_at: string;
 }
 
 export default function Practice() {
@@ -44,6 +45,23 @@ export default function Practice() {
     }
   }
 
+  async function updateRepInSupabase(
+    newRepSummary: string,
+    newRepDate: string
+  ) {
+    try {
+      if (!rep) throw Error("No rep!");
+      await supabase
+        .from("Reps")
+        .update({ summary: newRepSummary, created_at: newRepDate })
+        .eq("id", rep.id);
+      Keyboard.dismiss();
+      console.log("Changing the rep!");
+    } catch (e) {
+      console.log("Error saving the rep :(", e);
+    }
+  }
+
   return (
     <>
       <Stack.Screen
@@ -51,7 +69,11 @@ export default function Practice() {
           title: "Rep details",
         }}
       />
-      {rep ? <RepView rep={rep} /> : <Text>Loading...</Text>}
+      {rep ? (
+        <RepView rep={rep} onChange={updateRepInSupabase} />
+      ) : (
+        <Text>Loading...</Text>
+      )}
     </>
   );
 }
