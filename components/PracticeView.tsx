@@ -64,16 +64,8 @@ export default function PracticeView({ practiceId }: Props) {
       if (repsError) throw repsError;
       if (userError) throw userError;
 
-      // TODO keep the raw reps without restructuring?
       if (repsData) {
-        const reps = repsData
-          .map((rep, index) => ({
-            repNumber: index + 1,
-            repText: rep.summary,
-            repDate: rep.created_at,
-          }))
-          .reverse();
-
+        const reps = repsData.reverse();
         setReps(reps);
         setNextRep(reps.length + 1);
       }
@@ -107,9 +99,8 @@ export default function PracticeView({ practiceId }: Props) {
 
       setReps((prevReps) => [
         {
-          repNumber: nextRep.toString(),
-          repText: nextRepText,
-          repDate: new Date().toISOString().split("T")[0],
+          summary: nextRepText,
+          created_at: new Date().toISOString().split("T")[0],
         },
         ...prevReps,
       ]);
@@ -209,7 +200,7 @@ export default function PracticeView({ practiceId }: Props) {
                 fontSize: 16,
               }}
             >
-              Rep {nextRep - 1 - index} ({item.repDate}): {item.repText}
+              Rep {nextRep - 1 - index} ({item.created_at}): {item.summary}
             </Text>
           </Link>
         </View>
