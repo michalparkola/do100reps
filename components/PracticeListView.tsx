@@ -4,57 +4,78 @@ import { Link } from "expo-router";
 import { supabase } from "@/helpers/supabase";
 import PracticeGrid from "@/components/PracticeGrid";
 import { AddPractice } from "./AddPractice";
+import { useQuery } from "@tanstack/react-query";
+
+async function getSupabaseUserId() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data.user.id;
+  }
+}
+
+async function getSupabasePractices(userid: string) {
+  const { data, error } = await supabase
+    .from("Practices")
+    .select()
+    .eq("user_id", userid)
+    .not("do100reps_title", "is", null);
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
+  }
+}
+
+function groupPracticesByCategory(practices: any[]) {
+  return Object.entries(
+    practices.reduce((groups, practice) => {
+      const { category } = practice;
+      (groups[category] = groups[category] || []).push(practice);
+      return groups;
+    }, {})
+  ).map(([title, data]) => ({ title, data })) as any[];
+}
 
 export default function PracticeList() {
-  const [practices, setPractices] = useState<any[]>([]);
+  const {
+    isPending: isPendingUser,
+    error: errorUser,
+    data: userid,
+  } = useQuery({
+    queryKey: ["userid"],
+    queryFn: getSupabaseUserId,
+  });
 
-  useEffect(() => {
-    getPracticesFromSupabase();
-  }, []);
-
-  async function getPracticesFromSupabase() {
-    try {
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-
-      let userId = null;
-      if (userData && userData.user && !userError) {
-        userId = userData.user.id;
-      } else throw userError;
-
-      const { data } = await supabase
-        .from("Practices")
-        .select()
-        .eq("user_id", userId)
-        .not("do100reps_title", "is", null);
-
-      if (data) {
-        const groupedPractices = data.reduce((groups, practice) => {
-          const category = practice.category;
-          if (!groups[category]) {
-            groups[category] = [];
-          }
-          groups[category].push(practice);
-          return groups;
-        }, {});
-
-        // Convert object to array of sections
-        const sections = Object.keys(groupedPractices).map((category) => ({
-          title: category,
-          data: groupedPractices[category],
-        }));
-        setPractices(sections);
+  const {
+    isPending: isPendingPractices,
+    error: errorPractices,
+    data: tsq_practices,
+  } = useQuery({
+    queryKey: ["practices", userid],
+    queryFn: () => {
+      if (userid) {
+        const data = getSupabasePractices(userid);
+        return data;
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+    },
+    enabled: !!userid,
+  });
+
+  if (isPendingUser || isPendingPractices) return <Text>Loading...</Text>;
+  if (errorUser || errorPractices) return <Text>Error!</Text>;
+
+  const tsq_categories = groupPracticesByCategory(tsq_practices ?? []);
 
   return (
     <View style={{ flex: 1 }}>
+      <Text>{userid}</Text>
+      <Text>{tsq_practices?.length}</Text>
       <SectionList
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
-        sections={practices}
+        sections={tsq_categories}
         keyExtractor={(item) => item.do100reps_title}
         renderItem={({ item }) => (
           <Link href={"/practice/" + item.id}>
@@ -95,7 +116,7 @@ export default function PracticeList() {
           </Text>
         )}
       />
-      <AddPractice onPracticeAdded={getPracticesFromSupabase} />
+      <AddPractice />
     </View>
   );
 }
