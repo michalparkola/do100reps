@@ -52,7 +52,7 @@ export default function PracticeList() {
   const {
     isPending: isPendingPractices,
     error: errorPractices,
-    data: tsq_practices,
+    data: practices,
   } = useQuery({
     queryKey: ["practices", userid],
     queryFn: () => {
@@ -67,15 +67,13 @@ export default function PracticeList() {
   if (isPendingUser || isPendingPractices) return <Text>Loading...</Text>;
   if (errorUser || errorPractices) return <Text>Error!</Text>;
 
-  const tsq_categories = groupPracticesByCategory(tsq_practices ?? []);
+  const categories = groupPracticesByCategory(practices ?? []);
 
   return (
     <View style={{ flex: 1 }}>
-      <Text>{userid}</Text>
-      <Text>{tsq_practices?.length}</Text>
       <SectionList
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
-        sections={tsq_categories}
+        sections={categories}
         keyExtractor={(item) => item.do100reps_title}
         renderItem={({ item }) => (
           <Link href={"/practice/" + item.id}>
