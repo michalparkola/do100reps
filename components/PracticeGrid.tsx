@@ -8,7 +8,7 @@ interface Props {
 
 export default function PracticeGrid({ nextRep, size }: Props) {
   function lightUpGrid(nextRep: number) {
-    let newRepsGrid = Array.from({ length: 10 }, () => Array(10).fill(false));
+    const newRepsGrid = Array.from({ length: 10 }, () => Array(10).fill(false));
 
     let repsDone = nextRep - 1;
     let nextRow = 0;
