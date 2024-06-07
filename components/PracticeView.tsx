@@ -185,16 +185,16 @@ export default function PracticeView({ practiceId }: Props) {
         </View>
       }
       renderItem={({ item, index }) => (
-        <Link href={"/rep/" + item.id} asChild>
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 5,
-              padding: 12,
-              marginBottom: 12,
-              elevation: 5,
-            }}
-          >
+        <View
+          style={{
+            backgroundColor: "#fff",
+            borderRadius: 5,
+            padding: 12,
+            marginBottom: 12,
+            elevation: 5,
+          }}
+        >
+          <Link href={"/rep/" + item.id}>
             <Text
               style={{
                 fontSize: 16,
@@ -202,8 +202,8 @@ export default function PracticeView({ practiceId }: Props) {
             >
               Rep {nextRep - 1 - index} ({item.created_at}): {item.summary}
             </Text>
-          </View>
-        </Link>
+          </Link>
+        </View>
       )}
     />
   );
