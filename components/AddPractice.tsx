@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, Modal } from "react-native";
 import { supabase } from "@/helpers/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 
-export function AddPractice({
-  onPracticeAdded,
-}: {
-  onPracticeAdded: () => void;
-}) {
+export function AddPractice() {
   const [modalVisible, setModalVisible] = useState(false);
   const [newPracticeName, setNewPracticeName] = useState("");
   const [newPracticeTitle, setNewPracticeTitle] = useState("");
+
+  const queryClient = useQueryClient();
+
   async function createNewPractice() {
     if (!newPracticeName || !newPracticeTitle) return;
 
@@ -22,7 +22,7 @@ export function AddPractice({
 
     if (!error) {
       setModalVisible(false);
-      onPracticeAdded();
+      queryClient.invalidateQueries({ queryKey: ["practices"] });
     } else {
       console.error(error);
     }
