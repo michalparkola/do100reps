@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TextInput,
-  Button,
-  FlatList,
-  Keyboard,
-  ScrollView,
-} from "react-native";
+import { Text, View, FlatList, ScrollView } from "react-native";
 import PracticeGrid from "@/components/PracticeGrid";
 import { supabase } from "@/helpers/supabase";
 
@@ -22,7 +13,6 @@ export default function PracticeReview({ userId, practiceId }: Props) {
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [nextRep, setNextRep] = React.useState<number>(1);
-  const [nextRepText, setNextRepText] = React.useState("");
   const [practice, setPractice] = React.useState<any>(null);
   const [reps, setReps] = React.useState<any[]>([]);
 

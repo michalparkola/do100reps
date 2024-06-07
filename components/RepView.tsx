@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text, TextInput, Pressable, Button } from "react-native";
+import { Text, TextInput, Pressable } from "react-native";
 import { Calendar } from "react-native-calendars";
 
 interface Rep {
