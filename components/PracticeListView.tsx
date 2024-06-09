@@ -20,6 +20,7 @@ function groupPracticesByCategory(practices: any[]) {
 }
 
 export default function PracticeList() {
+  // Query: getSupabaseUserId
   const {
     isPending: isPendingUser,
     error: errorUser,
@@ -29,6 +30,7 @@ export default function PracticeList() {
     queryFn: getSupabaseUserId,
   });
 
+  // Query: getSupabasePractices
   const {
     isPending: isPendingPractices,
     error: errorPractices,
