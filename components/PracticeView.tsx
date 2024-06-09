@@ -44,38 +44,38 @@ export default function PracticeView({ practiceId }: Props) {
     setPracticeTitle(practiceTitle);
 
     const reps = await getSupabaseRepsByPracticeName(practiceName);
-        setReps(reps);
-        setNextRep(reps.length + 1);
+    setReps(reps);
+    setNextRep(reps.length + 1);
   }
 
   async function savePracticeTitle(id: string, title: string) {
-      await supabase
-        .from("Practices")
+    await supabase
+      .from("Practices")
       .update({ do100reps_title: title })
       .eq("id", id);
   }
 
   async function saveNextRep() {
-      await supabase
-        .from("Reps")
-        .insert({ summary: nextRepText, practice: practice.name });
+    await supabase
+      .from("Reps")
+      .insert({ summary: nextRepText, practice: practice.name });
 
-      await supabase
-        .from("Practices")
-        .update({ do100reps_count: nextRep })
-        .eq("id", practice.id);
+    await supabase
+      .from("Practices")
+      .update({ do100reps_count: nextRep })
+      .eq("id", practice.id);
 
-      setReps((prevReps) => [
-        {
-          summary: nextRepText,
-          created_at: new Date().toISOString().split("T")[0],
-        },
-        ...prevReps,
-      ]);
+    setReps((prevReps) => [
+      {
+        summary: nextRepText,
+        created_at: new Date().toISOString().split("T")[0],
+      },
+      ...prevReps,
+    ]);
 
-      setNextRep(nextRep + 1);
-      setNextRepText("");
-      Keyboard.dismiss();
+    setNextRep(nextRep + 1);
+    setNextRepText("");
+    Keyboard.dismiss();
   }
 
   return (
