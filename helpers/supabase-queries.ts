@@ -43,7 +43,8 @@ export async function getSupabasePractices(userid: string) {
       .from("Reps")
       .select()
       .eq("practice", practiceName)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .order("summary", { ascending: false });
   
     if (error) {
       throw new Error(error.message);
@@ -61,7 +62,8 @@ export async function getSupabasePractices(userid: string) {
       .from("Reps")
       .select()
       .eq("practice", practiceName)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .order("summary", { ascending: false });
   
     if (error) {
       throw new Error(error.message);
