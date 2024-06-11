@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Text, TextInput, Pressable, FlatList, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { useQuery } from "@tanstack/react-query";
-import { getNotesByRepId } from "@/helpers/supabase-queries";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getNotesByRepId, updateNote } from "@/helpers/supabase-queries";
 
 interface Rep {
   id: string;
@@ -23,6 +23,11 @@ export default function RepView({ rep, onChange }: RepViewProps) {
   const [date, setDate] = useState<string>(rep.created_at);
   const [isEditingDate, setIsEditingDate] = useState(false);
 
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [newNoteText, setNewNoteText] = useState<string>("");
+
+  const queryClient = useQueryClient();
+
   function handleDatePicked(dateString: string) {
     setDate(dateString);
     setIsEditingDate(false);
@@ -40,6 +45,13 @@ export default function RepView({ rep, onChange }: RepViewProps) {
   });
 
   console.log(notes);
+
+  const updateNoteMutation = useMutation({
+    mutationFn: ({ note_id, newText }: { note_id: string; newText: string }) =>
+      updateNote(note_id, newText),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["notes", rep.id] }),
+  });
 
   return (
     <>
@@ -86,10 +98,36 @@ export default function RepView({ rep, onChange }: RepViewProps) {
           style={{ margin: 12 }}
           data={notes}
           ListHeaderComponent={<Text style={{ marginBottom: 12 }}>Notes:</Text>}
-          renderItem={({ item, index }) => (
-            <Text style={{ marginTop: 12, marginBottom: 12 }}>
-              {item.created_at.substring(0, 10)} {item.text}
-            </Text>
+          renderItem={({ item }) => (
+            <View>
+              {editingNoteId === item.id ? (
+                <TextInput
+                  style={{ margin: 12, padding: 6 }}
+                  value={newNoteText}
+                  onChangeText={setNewNoteText}
+                  onSubmitEditing={() => {
+                    updateNoteMutation.mutate({
+                      note_id: item.id,
+                      newText: newNoteText,
+                    });
+                    setEditingNoteId(null);
+                  }}
+                  onBlur={() => setEditingNoteId(null)}
+                  autoFocus
+                />
+              ) : (
+                <Pressable
+                  onPress={() => {
+                    setEditingNoteId(item.id);
+                    setNewNoteText(item.text);
+                  }}
+                >
+                  <Text style={{ marginTop: 12, marginBottom: 12 }}>
+                    {item.modfied_at.substring(0, 10)} {item.text}
+                  </Text>
+                </Pressable>
+              )}
+            </View>
           )}
           ItemSeparatorComponent={() => (
             <View style={{ height: 1, backgroundColor: "#ccc" }} />

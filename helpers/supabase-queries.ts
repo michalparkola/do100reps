@@ -80,3 +80,16 @@ export async function getNotesByRepId(rep_id: string) {
     return data;
   }
 }
+
+export async function updateNote(note_id: string, text: string) {
+  const { data, error } = await supabase
+    .from("RepNotes")
+    .update({ text: text })
+    .eq("id", note_id);
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
+  }
+}
