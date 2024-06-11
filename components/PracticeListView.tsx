@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { View, Text, SectionList } from "react-native";
 import { Link } from "expo-router";
 import {
