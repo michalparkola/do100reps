@@ -1,8 +1,19 @@
 import { useState } from "react";
-import { Text, TextInput, Pressable, FlatList, View } from "react-native";
+import {
+  Text,
+  TextInput,
+  Pressable,
+  FlatList,
+  View,
+  Button,
+} from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getNotesByRepId, updateNote } from "@/helpers/supabase-queries";
+import {
+  getNotesByRepId,
+  updateNote,
+  createNote,
+} from "@/helpers/supabase-queries";
 
 interface Rep {
   id: string;
@@ -24,6 +35,7 @@ export default function RepView({ rep, onChange }: RepViewProps) {
   const [isEditingDate, setIsEditingDate] = useState(false);
 
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editedNoteText, setEditedNoteText] = useState<string>("");
   const [newNoteText, setNewNoteText] = useState<string>("");
 
   const queryClient = useQueryClient();
@@ -51,6 +63,15 @@ export default function RepView({ rep, onChange }: RepViewProps) {
       updateNote(note_id, newText),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["notes", rep.id] }),
+  });
+
+  const createNoteMutation = useMutation({
+    mutationFn: ({ rep_id, text }: { rep_id: string; text: string }) =>
+      createNote(rep_id, text),
+    onSuccess: () => {
+      // Invalidate and refetch notes query to get the updated notes
+      queryClient.invalidateQueries({ queryKey: ["notes", rep.id] });
+    },
   });
 
   return (
@@ -90,6 +111,32 @@ export default function RepView({ rep, onChange }: RepViewProps) {
           </Pressable>
         </>
       )}
+      <Text style={{ margin: 12 }}>New note:</Text>
+      <TextInput
+        value={newNoteText}
+        onChangeText={setNewNoteText}
+        style={{
+          height: 150,
+          margin: 12,
+          borderWidth: 1,
+          borderColor: "lightgray",
+          padding: 10,
+        }}
+        multiline
+      />
+      <View style={{ margin: 12 }}>
+        <Button
+          title="Save Note"
+          color="lightgreen"
+          accessibilityLabel="Create a new note for this rep."
+          onPress={() => {
+            if (newNoteText.trim()) {
+              createNoteMutation.mutate({ rep_id: rep.id, text: newNoteText });
+              setNewNoteText(""); // Clear the input after adding
+            }
+          }}
+        />
+      </View>
 
       {isPendingNotes || errorNotes || notes.length == 0 ? (
         <Text style={{ margin: 12 }}>No notes (yet)</Text>
@@ -103,12 +150,12 @@ export default function RepView({ rep, onChange }: RepViewProps) {
               {editingNoteId === item.id ? (
                 <TextInput
                   style={{ margin: 12, padding: 6 }}
-                  value={newNoteText}
-                  onChangeText={setNewNoteText}
+                  value={editedNoteText}
+                  onChangeText={setEditedNoteText}
                   onSubmitEditing={() => {
                     updateNoteMutation.mutate({
                       note_id: item.id,
-                      newText: newNoteText,
+                      newText: editedNoteText,
                     });
                     setEditingNoteId(null);
                   }}
@@ -119,11 +166,11 @@ export default function RepView({ rep, onChange }: RepViewProps) {
                 <Pressable
                   onPress={() => {
                     setEditingNoteId(item.id);
-                    setNewNoteText(item.text);
+                    setEditedNoteText(item.text);
                   }}
                 >
                   <Text style={{ marginTop: 12, marginBottom: 12 }}>
-                    {item.modfied_at.substring(0, 10)} {item.text}
+                    {item.modified_at.substring(0, 10)} {item.text}
                   </Text>
                 </Pressable>
               )}

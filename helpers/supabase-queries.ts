@@ -72,7 +72,11 @@ export async function getSupabaseRepsByPracticeId(practiceId: string) {
 }
 
 export async function getNotesByRepId(rep_id: string) {
-  const { data, error } = await supabase.from("RepNotes").select();
+  const { data, error } = await supabase
+    .from("RepNotes")
+    .select()
+    .eq("rep_id", rep_id)
+    .order("modified_at", { ascending: false });
 
   if (error) {
     throw new Error(error.message);
@@ -86,6 +90,18 @@ export async function updateNote(note_id: string, text: string) {
     .from("RepNotes")
     .update({ text: text })
     .eq("id", note_id);
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
+  }
+}
+
+export async function createNote(rep_id: string, text: string) {
+  const { data, error } = await supabase
+    .from("RepNotes")
+    .insert({ rep_id: rep_id, text: text });
 
   if (error) {
     throw new Error(error.message);
