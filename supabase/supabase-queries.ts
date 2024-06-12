@@ -1,4 +1,4 @@
-import { supabase } from "@/helpers/supabase";
+import { supabase } from "@/supabase/supabase-client";
 
 export async function getSupabaseUserId() {
   const { data, error } = await supabase.auth.getUser();

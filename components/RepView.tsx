@@ -13,7 +13,7 @@ import {
   getNotesByRepId,
   updateNote,
   createNote,
-} from "@/helpers/supabase-queries";
+} from "@/supabase/supabase-queries";
 
 interface Rep {
   id: string;

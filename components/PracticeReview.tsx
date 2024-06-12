@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, FlatList, ScrollView } from "react-native";
 import PracticeGrid from "@/components/PracticeGrid";
-import { supabase } from "@/helpers/supabase";
+import { supabase } from "@/supabase/supabase-client";
 
 interface Props {
   userId: string;

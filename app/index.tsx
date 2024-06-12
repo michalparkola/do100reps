@@ -1,7 +1,7 @@
 import React from "react";
 import "react-native-url-polyfill/auto";
 
-import { supabase } from "@/helpers/supabase";
+import { supabase } from "@/supabase/supabase-client";
 import { Session } from "@supabase/supabase-js";
 import Auth from "@/components/Auth";
 import PracticeList from "@/components/PracticeListView";

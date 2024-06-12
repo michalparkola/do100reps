@@ -10,11 +10,11 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 import PracticeGrid from "@/components/PracticeGrid";
-import { supabase } from "@/helpers/supabase";
+import { supabase } from "@/supabase/supabase-client";
 import {
   getSupabasePracticeById,
   getSupabaseRepsByPracticeName,
-} from "@/helpers/supabase-queries";
+} from "@/supabase/supabase-queries";
 
 interface Props {
   practiceId: string;

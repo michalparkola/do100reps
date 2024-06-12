@@ -3,7 +3,7 @@ import { Link } from "expo-router";
 import {
   getSupabaseUserId,
   getSupabasePractices,
-} from "@/helpers/supabase-queries";
+} from "@/supabase/supabase-queries";
 import PracticeGrid from "@/components/PracticeGrid";
 import { AddPractice } from "./AddPractice";
 import { useQuery } from "@tanstack/react-query";

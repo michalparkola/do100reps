@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, Modal } from "react-native";
-import { supabase } from "@/helpers/supabase";
+import { supabase } from "@/supabase/supabase-client";
 import { useQueryClient } from "@tanstack/react-query";
 
 export function AddPractice() {

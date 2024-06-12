@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { Text, Pressable } from "react-native";
-import { handleLogout } from "@/helpers/supabase";
+import { handleLogout } from "@/supabase/supabase-client";
 import { HeaderButtonProps } from "@react-navigation/native-stack/lib/typescript/src/types";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
