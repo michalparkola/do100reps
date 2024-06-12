@@ -1,8 +1,11 @@
 import { useLocalSearchParams, Stack } from "expo-router";
 import PracticeView from "@/components/PracticeView";
+import { Text } from "react-native";
 
 export default function Practice() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id: practice_id } = useLocalSearchParams<{ id: string }>();
+
+  if (!practice_id) return <Text>No practice selected</Text>;
 
   return (
     <>
@@ -11,7 +14,7 @@ export default function Practice() {
           title: "Continue Practice",
         }}
       />
-      <PracticeView practiceId={id} />
+      <PracticeView practiceId={practice_id} />
     </>
   );
 }
