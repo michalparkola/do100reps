@@ -11,19 +11,18 @@ import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   getSupabasePracticeById,
-  getSupabaseRepsByPracticeName,
+  getSupabaseRepsByPracticeId,
 } from "@/supabase/supabase-queries";
 
 import EditablePracticeTitle from "./EditablePracticeTitle";
 import PracticeProgress from "./PracticeProgress";
+import NextRep from "./NextRep";
 
 interface Props {
   practiceId: string;
 }
 
 export default function PracticeView({ practiceId }: Props) {
-  const [nextRepText, setNextRepText] = useState("");
-
   // query: practice
   const {
     isPending: isPendingPractice,
@@ -41,7 +40,7 @@ export default function PracticeView({ practiceId }: Props) {
     data: reps,
   } = useQuery({
     queryKey: ["reps", practiceId],
-    queryFn: () => getSupabaseRepsByPracticeName(practice.name),
+    queryFn: () => getSupabaseRepsByPracticeId(practiceId),
     enabled: !!practice,
   });
 
@@ -59,31 +58,11 @@ export default function PracticeView({ practiceId }: Props) {
             practice_title={practice.do100reps_title}
           />
           <PracticeProgress completed_reps_count={reps.length} />
-
-          <Text style={{ fontSize: 16, marginTop: 12 }}>
-            Describe the result of the next rep:
-          </Text>
-          <TextInput
-            style={{
-              height: 150,
-              marginTop: 12,
-              marginBottom: 6,
-              borderWidth: 1,
-              borderColor: "lightgray",
-              padding: 10,
-            }}
-            multiline
-            onChangeText={setNextRepText}
-            value={nextRepText}
+          <NextRep
+            practice_id={practiceId}
+            next_rep_cnt={reps.length + 1}
+            onSaveNewRep={() => console.log("Yaba daba doo!")}
           />
-          <View>
-            <Button
-              onPress={() => console.log("TODO: saveNextRep")}
-              title="Save Rep"
-              color="lightgreen"
-              accessibilityLabel="Save the rep and prepare for the next one."
-            />
-          </View>
         </View>
       }
       renderItem={({ item, index }) => (
