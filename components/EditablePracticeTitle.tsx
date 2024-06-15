@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/supabase/supabase-client";
 import {
   getSupabasePracticeById,
   savePracticeTitle,
@@ -29,6 +28,7 @@ export default function EditablePracticeTitle({
     queryFn: () => getSupabasePracticeById(practice_id),
   });
 
+  // mutation: practice title
   const queryClient = useQueryClient();
   const practiceTitleMutation = useMutation({
     mutationFn: (newTitle: string) => savePracticeTitle(practice_id, newTitle),
