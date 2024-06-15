@@ -7,9 +7,9 @@ import {
   getSupabaseRepsByPracticeId,
 } from "@/supabase/supabase-queries";
 
-import EditablePracticeTitle from "./EditablePracticeTitle";
-import PracticeProgress from "./PracticeProgress";
-import NextRep from "./NextRep";
+import EditablePracticeTitle from "../components/EditablePracticeTitle";
+import PracticeProgress from "../components/PracticeProgress";
+import NextRep from "../components/NextRep";
 
 interface Props {
   practiceId: string;

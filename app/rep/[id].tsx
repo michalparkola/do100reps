@@ -2,7 +2,7 @@ import { useLocalSearchParams, Stack } from "expo-router";
 import { useState, useEffect } from "react";
 import { Text, Keyboard } from "react-native";
 import { supabase } from "@/supabase/supabase-client";
-import RepView from "@/components/RepView";
+import RepView from "@/screens/RepView";
 
 interface Rep {
   id: string;

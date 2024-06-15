@@ -3,8 +3,8 @@ import "react-native-url-polyfill/auto";
 
 import { supabase } from "@/supabase/supabase-client";
 import { Session } from "@supabase/supabase-js";
-import Auth from "@/components/Auth";
-import PracticeList from "@/components/PracticeListView";
+import Auth from "@/screens/Auth";
+import PracticeList from "@/screens/PracticeListView";
 
 export default function Index() {
   const [session, setSession] = React.useState<Session | null>(null);
