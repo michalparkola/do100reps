@@ -7,6 +7,7 @@ import {
   FlatList,
   Keyboard,
   Pressable,
+  StyleSheet,
 } from "react-native";
 import { Link } from "expo-router";
 import PracticeGrid from "@/components/PracticeGrid";
@@ -21,8 +22,6 @@ interface Props {
 }
 
 export default function PracticeView({ practiceId }: Props) {
-  // TODO check if valid practiceId
-
   const [nextRep, setNextRep] = useState<number>(1);
   const [nextRepText, setNextRepText] = useState("");
   const [practice, setPractice] = useState<any>(null);
@@ -80,7 +79,7 @@ export default function PracticeView({ practiceId }: Props) {
 
   return (
     <FlatList
-      style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
+      style={styles.list}
       data={reps}
       ListHeaderComponent={
         <View style={{ marginBottom: 12 }}>
@@ -114,12 +113,15 @@ export default function PracticeView({ practiceId }: Props) {
           )}
 
           <View style={{ flexDirection: "row" }}>
+            <PracticeGrid nextRep={nextRep} size={10} />
             <View>
-              <PracticeGrid nextRep={nextRep} size={10} />
+              <Text style={{ fontSize: 32, marginLeft: 12 }}>
+                Next rep: {nextRep}
+              </Text>
+              <Text style={{ fontSize: 22, marginLeft: 12 }}>
+                Level: {Math.ceil(nextRep / 10)}
+              </Text>
             </View>
-            <Text style={{ fontSize: 32, marginLeft: 12 }}>
-              Next rep {nextRep.toString()}/100
-            </Text>
           </View>
           <Text style={{ fontSize: 16, marginTop: 12 }}>
             Describe the result of the next rep:
@@ -148,26 +150,41 @@ export default function PracticeView({ practiceId }: Props) {
         </View>
       }
       renderItem={({ item, index }) => (
-        <View
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: 5,
-            padding: 12,
-            marginBottom: 12,
-            elevation: 5,
-          }}
-        >
+        <View style={styles.repContainer}>
           <Link href={"/rep/" + item.id}>
-            <Text
-              style={{
-                fontSize: 16,
-              }}
-            >
-              Rep {nextRep - 1 - index} ({item.created_at}): {item.summary}
-            </Text>
+            <View>
+              <Text style={styles.repText}>{item.summary}</Text>
+              <Text style={styles.repSecondaryText}>
+                Rep {reps.length - index} {item.created_at}{" "}
+              </Text>
+            </View>
           </Link>
         </View>
       )}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  list: {
+    padding: 16,
+  },
+  repContainer: {
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+  },
+  repText: {
+    fontSize: 16,
+  },
+  repSecondaryText: {
+    fontSize: 14,
+    color: "#888",
+    marginTop: 10,
+  },
+});
