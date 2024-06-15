@@ -38,6 +38,13 @@ export async function getSupabasePracticeById(practiceid: string) {
   }
 }
 
+export async function savePracticeTitle(id: string, title: string) {
+  await supabase
+    .from("Practices")
+    .update({ do100reps_title: title })
+    .eq("id", id);
+}
+
 export async function getSupabaseRepsByPracticeName(practiceName: string) {
   const { data, error } = await supabase
     .from("Reps")

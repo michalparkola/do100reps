@@ -5,77 +5,48 @@ import {
   TextInput,
   Button,
   FlatList,
-  Keyboard,
-  Pressable,
   StyleSheet,
 } from "react-native";
 import { Link } from "expo-router";
-import PracticeGrid from "@/components/PracticeGrid";
-import { supabase } from "@/supabase/supabase-client";
+import { useQuery } from "@tanstack/react-query";
 import {
   getSupabasePracticeById,
   getSupabaseRepsByPracticeName,
 } from "@/supabase/supabase-queries";
+
+import EditablePracticeTitle from "./EditablePracticeTitle";
+import PracticeProgress from "./PracticeProgress";
 
 interface Props {
   practiceId: string;
 }
 
 export default function PracticeView({ practiceId }: Props) {
-  const [nextRep, setNextRep] = useState<number>(1);
   const [nextRepText, setNextRepText] = useState("");
-  const [practice, setPractice] = useState<any>(null);
-  const [reps, setReps] = useState<any[]>([]);
-  const [isEditingPracticeTitle, setIsEditingPracticeTitle] = useState(false);
-  const [practiceTitle, setPracticeTitle] = useState("Practice Title");
 
-  React.useEffect(() => {
-    getRepsFromSupabase();
-  }, []);
+  // query: practice
+  const {
+    isPending: isPendingPractice,
+    error: errorPractice,
+    data: practice,
+  } = useQuery({
+    queryKey: ["practice", practiceId],
+    queryFn: () => getSupabasePracticeById(practiceId),
+  });
 
-  async function getRepsFromSupabase() {
-    let p = await getSupabasePracticeById(practiceId);
+  // query: reps
+  const {
+    isPending: isPendingReps,
+    error: errorReps,
+    data: reps,
+  } = useQuery({
+    queryKey: ["reps", practiceId],
+    queryFn: () => getSupabaseRepsByPracticeName(practice.name),
+    enabled: !!practice,
+  });
 
-    const practiceName = p ? p.name : "";
-    const practiceTitle = p ? p.do100reps_title : "";
-
-    setPractice(p);
-    setPracticeTitle(practiceTitle);
-
-    const reps = await getSupabaseRepsByPracticeName(practiceName);
-    setReps(reps);
-    setNextRep(reps.length + 1);
-  }
-
-  async function savePracticeTitle(id: string, title: string) {
-    await supabase
-      .from("Practices")
-      .update({ do100reps_title: title })
-      .eq("id", id);
-  }
-
-  async function saveNextRep() {
-    await supabase
-      .from("Reps")
-      .insert({ summary: nextRepText, practice: practice.name });
-
-    await supabase
-      .from("Practices")
-      .update({ do100reps_count: nextRep })
-      .eq("id", practice.id);
-
-    setReps((prevReps) => [
-      {
-        summary: nextRepText,
-        created_at: new Date().toISOString().split("T")[0],
-      },
-      ...prevReps,
-    ]);
-
-    setNextRep(nextRep + 1);
-    setNextRepText("");
-    Keyboard.dismiss();
-  }
+  if (isPendingPractice || errorPractice) return <Text>Loading...</Text>;
+  if (isPendingReps || errorReps) return <Text>Loading...</Text>;
 
   return (
     <FlatList
@@ -83,46 +54,12 @@ export default function PracticeView({ practiceId }: Props) {
       data={reps}
       ListHeaderComponent={
         <View style={{ marginBottom: 12 }}>
-          {isEditingPracticeTitle ? (
-            <TextInput
-              style={{
-                fontSize: 40,
-                fontWeight: "bold",
-                marginBottom: 12,
-              }}
-              value={practiceTitle}
-              onChangeText={setPracticeTitle}
-              onSubmitEditing={() => {
-                setIsEditingPracticeTitle(false);
-                savePracticeTitle(practice.id, practiceTitle);
-              }}
-              autoFocus={true}
-            />
-          ) : (
-            <Pressable onPress={() => setIsEditingPracticeTitle(true)}>
-              <Text
-                style={{
-                  fontSize: 40,
-                  fontWeight: "bold",
-                  marginBottom: 12,
-                }}
-              >
-                {practiceTitle}
-              </Text>
-            </Pressable>
-          )}
+          <EditablePracticeTitle
+            practice_id={practice.id}
+            practice_title={practice.do100reps_title}
+          />
+          <PracticeProgress completed_reps_count={reps.length} />
 
-          <View style={{ flexDirection: "row" }}>
-            <PracticeGrid nextRep={nextRep} size={10} />
-            <View>
-              <Text style={{ fontSize: 32, marginLeft: 12 }}>
-                Next rep: {nextRep}
-              </Text>
-              <Text style={{ fontSize: 22, marginLeft: 12 }}>
-                Level: {Math.ceil(nextRep / 10)}
-              </Text>
-            </View>
-          </View>
           <Text style={{ fontSize: 16, marginTop: 12 }}>
             Describe the result of the next rep:
           </Text>
@@ -141,7 +78,7 @@ export default function PracticeView({ practiceId }: Props) {
           />
           <View>
             <Button
-              onPress={saveNextRep}
+              onPress={() => console.log("TODO: saveNextRep")}
               title="Save Rep"
               color="lightgreen"
               accessibilityLabel="Save the rep and prepare for the next one."
