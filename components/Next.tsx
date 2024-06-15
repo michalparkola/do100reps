@@ -1,9 +1,6 @@
 import { Text } from "react-native";
 import { supabase } from "@/supabase/supabase-client";
-import {
-  getSupabasePracticeById,
-  getSupabaseRepsByPracticeName,
-} from "@/supabase/supabase-queries";
+import { getSupabasePracticeById } from "@/supabase/supabase-queries";
 import { useQuery } from "@tanstack/react-query";
 
 interface Props {
@@ -14,7 +11,7 @@ interface Props {
 // Feed to OpenAI
 // Display option for what to do next...
 
-export default function PracticeNext({ practiceId }: Props) {
+export default function Next({ practiceId }: Props) {
   const {
     isPending: isPendingPractice,
     error: errorPractice,

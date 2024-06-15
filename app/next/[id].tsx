@@ -1,6 +1,6 @@
 import { useLocalSearchParams, Stack } from "expo-router";
 import { Text } from "react-native";
-import PracticeNext from "@/components/PracticeNext";
+import Next from "@/components/Next";
 
 export default function Practice() {
   const { id: practice_id } = useLocalSearchParams<{ id: string }>();
@@ -14,7 +14,7 @@ export default function Practice() {
           title: "What might I do next?",
         }}
       />
-      <PracticeNext practiceId={practice_id} />
+      <Next practiceId={practice_id} />
     </>
   );
 }
