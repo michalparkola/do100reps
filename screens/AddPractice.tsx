@@ -75,17 +75,27 @@ export function AddPractice() {
           </View>
         </View>
       </Modal>
-      <Pressable
-        style={{
-          margin: 12,
-          alignItems: "flex-end",
-        }}
-        onPress={() => {
-          setModalVisible(true);
-        }}
-      >
-        <Text>Add Practice</Text>
-      </Pressable>
+      <View style={{ alignItems: "flex-end", margin: 12 }}>
+        <Pressable
+          style={{
+            backgroundColor: "lightgreen",
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 5,
+            justifyContent: "center",
+            height: 50,
+            shadowColor: "#000",
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+            shadowOffset: { width: 0, height: 3 },
+          }}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        >
+          <Text>Add Practice</Text>
+        </Pressable>
+      </View>
     </>
   );
 }
