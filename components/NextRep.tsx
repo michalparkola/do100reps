@@ -13,14 +13,9 @@ import { supabase } from "@/supabase/supabase-client";
 interface Props {
   practice_id: string;
   next_rep_cnt: number;
-  onSaveNewRep: () => void;
 }
 
-export default function NextRep({
-  practice_id,
-  next_rep_cnt,
-  onSaveNewRep,
-}: Props) {
+export default function NextRep({ practice_id, next_rep_cnt }: Props) {
   const [nextRepText, setNextRepText] = useState("");
 
   // mutation: practice title
@@ -41,7 +36,7 @@ export default function NextRep({
       console.log("Not saving an empty rep");
       return;
     }
-    console.log("Saving", nextRepText, practice_id);
+    console.log("Saving", next_rep_text, practice_id);
 
     await supabase
       .from("Reps")

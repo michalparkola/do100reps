@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TextInput,
-  Button,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import { Text, View, FlatList, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -58,11 +51,7 @@ export default function PracticeView({ practiceId }: Props) {
             practice_title={practice.do100reps_title}
           />
           <PracticeProgress completed_reps_count={reps.length} />
-          <NextRep
-            practice_id={practiceId}
-            next_rep_cnt={reps.length + 1}
-            onSaveNewRep={() => console.log("Yaba daba doo!")}
-          />
+          <NextRep practice_id={practiceId} next_rep_cnt={reps.length + 1} />
         </View>
       }
       renderItem={({ item, index }) => (
