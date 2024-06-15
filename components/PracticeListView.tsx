@@ -1,4 +1,4 @@
-import { View, Text, SectionList } from "react-native";
+import { View, Text, SectionList, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import {
   getSupabaseUserId,
@@ -58,17 +58,7 @@ export default function PracticeList() {
         keyExtractor={(item) => item.do100reps_title}
         renderItem={({ item }) => (
           <Link href={"/practice/" + item.id}>
-            <View
-              style={{
-                flexDirection: "row",
-                backgroundColor: "#fff",
-                borderRadius: 5,
-                padding: 12,
-                marginBottom: 12,
-                elevation: 5,
-                width: "100%",
-              }}
-            >
+            <View style={styles.card}>
               <View style={{ marginRight: 5 }}>
                 <PracticeGrid nextRep={item.do100reps_count + 1} size={9} />
               </View>
@@ -83,7 +73,8 @@ export default function PracticeList() {
                   {item.do100reps_title}
                 </Text>
                 <Text style={{ marginTop: 5 }}>
-                  Completed reps: {item.do100reps_count}/100
+                  Completed reps: {item.do100reps_count}/100 (level{" "}
+                  {Math.floor(1 + item.do100reps_count / 10)})
                 </Text>
               </View>
             </View>
@@ -99,3 +90,17 @@ export default function PracticeList() {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  card: {
+    flexDirection: "row",
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+    width: "100%",
+  },
+});
