@@ -6,6 +6,7 @@ import {
   FlatList,
   View,
   Button,
+  StyleSheet,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -46,7 +47,7 @@ export default function RepView({ rep, onChange }: RepViewProps) {
     onChange(repSummary, dateString);
   }
 
-  // get notes
+  // query: notes
   const {
     isPending: isPendingNotes,
     error: errorNotes,
@@ -55,8 +56,6 @@ export default function RepView({ rep, onChange }: RepViewProps) {
     queryKey: ["notes", rep.id],
     queryFn: () => getNotesByRepId(rep.id),
   });
-
-  console.log(notes);
 
   const updateNoteMutation = useMutation({
     mutationFn: ({ note_id, newText }: { note_id: string; newText: string }) =>
@@ -69,7 +68,6 @@ export default function RepView({ rep, onChange }: RepViewProps) {
     mutationFn: ({ rep_id, text }: { rep_id: string; text: string }) =>
       createNote(rep_id, text),
     onSuccess: () => {
-      // Invalidate and refetch notes query to get the updated notes
       queryClient.invalidateQueries({ queryKey: ["notes", rep.id] });
     },
   });
@@ -83,12 +81,20 @@ export default function RepView({ rep, onChange }: RepViewProps) {
           }}
         />
       ) : (
-        <Text style={{ margin: 12 }} onPress={() => setIsEditingDate(true)}>
-          Created at: {date}
-        </Text>
+        <>
+          <Text style={[styles.text, { margin: 12 }]}>Created at</Text>
+          <Text
+            style={{ marginHorizontal: 12, marginBottom: 12 }}
+            onPress={() => setIsEditingDate(true)}
+          >
+            {date}
+          </Text>
+        </>
       )}
 
-      <Text style={{ margin: 12 }}>Rep summary:</Text>
+      <Text style={[styles.text, { marginHorizontal: 12, marginTop: 12 }]}>
+        Rep summary
+      </Text>
       {isEditingRepSummary ? (
         <TextInput
           style={{ margin: 6, padding: 6 }}
@@ -111,76 +117,128 @@ export default function RepView({ rep, onChange }: RepViewProps) {
           </Pressable>
         </>
       )}
-      <Text style={{ margin: 12 }}>New note:</Text>
+
+      <Text style={[styles.text, { marginHorizontal: 12, marginTop: 12 }]}>
+        Notes
+      </Text>
+      {isPendingNotes || errorNotes || notes.length == 0 ? (
+        <Text style={{ margin: 12 }}>No notes (yet)</Text>
+      ) : (
+        <View style={{ flexGrow: 0 }}>
+          <FlatList
+            style={{ margin: 12 }}
+            data={notes}
+            renderItem={({ item }) => (
+              <View style={styles.noteContainer}>
+                {editingNoteId === item.id ? (
+                  <TextInput
+                    style={{ margin: 12, padding: 6 }}
+                    value={editedNoteText}
+                    onChangeText={setEditedNoteText}
+                    onSubmitEditing={() => {
+                      updateNoteMutation.mutate({
+                        note_id: item.id,
+                        newText: editedNoteText,
+                      });
+                      setEditingNoteId(null);
+                    }}
+                    onBlur={() => setEditingNoteId(null)}
+                    autoFocus
+                  />
+                ) : (
+                  <Pressable
+                    onPress={() => {
+                      setEditingNoteId(item.id);
+                      setEditedNoteText(item.text);
+                    }}
+                  >
+                    <Text style={{ marginVertical: 12 }}>
+                      {item.modified_at.substring(0, 10)} {item.text}
+                    </Text>
+                  </Pressable>
+                )}
+              </View>
+            )}
+            ItemSeparatorComponent={() => (
+              <View style={{ height: 1, backgroundColor: "#ccc" }} />
+            )}
+          />
+        </View>
+      )}
+      <Text
+        style={[
+          styles.text,
+          {
+            marginTop: 12,
+            marginHorizontal: 12,
+            marginBottom: 6,
+          },
+        ]}
+      >
+        Add note
+      </Text>
       <TextInput
         value={newNoteText}
         onChangeText={setNewNoteText}
         style={{
           height: 150,
-          margin: 12,
+          marginLeft: 12,
+          marginRight: 12,
           borderWidth: 1,
           borderColor: "lightgray",
+          backgroundColor: "lightyellow",
           padding: 10,
         }}
         multiline
       />
-      <View style={{ margin: 12 }}>
-        <Button
-          title="Save Note"
-          color="lightgreen"
-          accessibilityLabel="Create a new note for this rep."
+      <View style={{ marginRight: 12, marginLeft: 12, marginTop: 6 }}>
+        <Pressable
+          style={styles.button}
           onPress={() => {
             if (newNoteText.trim()) {
               createNoteMutation.mutate({ rep_id: rep.id, text: newNoteText });
               setNewNoteText(""); // Clear the input after adding
             }
           }}
-        />
+        >
+          <Text>Save note</Text>
+        </Pressable>
       </View>
-
-      {isPendingNotes || errorNotes || notes.length == 0 ? (
-        <Text style={{ margin: 12 }}>No notes (yet)</Text>
-      ) : (
-        <FlatList
-          style={{ margin: 12 }}
-          data={notes}
-          ListHeaderComponent={<Text style={{ marginBottom: 12 }}>Notes:</Text>}
-          renderItem={({ item }) => (
-            <View>
-              {editingNoteId === item.id ? (
-                <TextInput
-                  style={{ margin: 12, padding: 6 }}
-                  value={editedNoteText}
-                  onChangeText={setEditedNoteText}
-                  onSubmitEditing={() => {
-                    updateNoteMutation.mutate({
-                      note_id: item.id,
-                      newText: editedNoteText,
-                    });
-                    setEditingNoteId(null);
-                  }}
-                  onBlur={() => setEditingNoteId(null)}
-                  autoFocus
-                />
-              ) : (
-                <Pressable
-                  onPress={() => {
-                    setEditingNoteId(item.id);
-                    setEditedNoteText(item.text);
-                  }}
-                >
-                  <Text style={{ marginTop: 12, marginBottom: 12 }}>
-                    {item.modified_at.substring(0, 10)} {item.text}
-                  </Text>
-                </Pressable>
-              )}
-            </View>
-          )}
-          ItemSeparatorComponent={() => (
-            <View style={{ height: 1, backgroundColor: "#ccc" }} />
-          )}
-        />
-      )}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "lightgreen",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  secondaryText: {
+    fontSize: 14,
+    color: "#888",
+    marginTop: 10,
+  },
+  noteContainer: {
+    backgroundColor: "lightyellow",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+  },
+});
