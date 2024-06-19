@@ -1,4 +1,5 @@
 import { View, Text, FlatList, StyleSheet } from "react-native";
+import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { getNuggets } from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
@@ -26,8 +27,12 @@ export default function NuggetList() {
       data={nuggets}
       renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
         <View style={styles.itemContainer}>
-          <Text style={styles.text}>{item.title}</Text>
-          <Text style={styles.secondaryText}>{item.created_at}</Text>
+          <Link href={"/nugget/" + item.id}>
+            <View>
+              <Text style={styles.text}>{item.title}</Text>
+              <Text style={styles.secondaryText}>{item.created_at}</Text>
+            </View>
+          </Link>
         </View>
       )}
     />

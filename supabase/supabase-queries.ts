@@ -111,3 +111,16 @@ export async function getNuggets() {
     return data;
   }
 }
+
+export async function getNugget(nugget_id: string) {
+  const { data, error } = await supabase
+    .from("Nuggets")
+    .select()
+    .eq("id", nugget_id);
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data[0];
+  }
+}
