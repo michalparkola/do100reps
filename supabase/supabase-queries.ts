@@ -24,7 +24,7 @@ export async function getSupabasePractices(userid: string) {
 }
 
 export async function getSupabasePracticeById(practiceid: string) {
-  let userid = await getSupabaseUserId();
+  const userid = await getSupabaseUserId();
   const { data, error } = await supabase
     .from("Practices")
     .select()
@@ -91,6 +91,19 @@ export async function createNote(rep_id: string, text: string) {
   const { data, error } = await supabase
     .from("RepNotes")
     .insert({ rep_id: rep_id, text: text });
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
+  }
+}
+
+export async function getNuggets() {
+  const { data, error } = await supabase
+    .from("Nuggets")
+    .select()
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw new Error(error.message);
