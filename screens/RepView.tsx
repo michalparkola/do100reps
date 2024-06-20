@@ -5,7 +5,6 @@ import {
   Pressable,
   FlatList,
   View,
-  Button,
   StyleSheet,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
@@ -25,17 +24,17 @@ interface Rep {
 
 interface RepViewProps {
   rep: Rep;
-  onChange: (newRepSummary: string, newRepDate: string) => void;
+  handleRepChange: (newRepSummary: string, newRepDate: string) => void;
 }
 
-export default function RepView({ rep, onChange }: RepViewProps) {
+export default function RepView({ rep, handleRepChange }: RepViewProps) {
   const [isEditingRepSummary, setIsEditingRepSummary] = useState(false);
   const [repSummary, setRepSummary] = useState(rep.summary);
 
   const [date, setDate] = useState<string>(rep.created_at);
   const [isEditingDate, setIsEditingDate] = useState(false);
 
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [editedNoteText, setEditedNoteText] = useState<string>("");
   const [newNoteText, setNewNoteText] = useState<string>("");
 
@@ -44,7 +43,7 @@ export default function RepView({ rep, onChange }: RepViewProps) {
   function handleDatePicked(dateString: string) {
     setDate(dateString);
     setIsEditingDate(false);
-    onChange(repSummary, dateString);
+    handleRepChange(repSummary, dateString);
   }
 
   // query: notes
@@ -75,11 +74,17 @@ export default function RepView({ rep, onChange }: RepViewProps) {
   return (
     <>
       {isEditingDate ? (
-        <Calendar
-          onDayPress={(day) => {
-            handleDatePicked(day.dateString);
-          }}
-        />
+        <>
+          <Calendar
+            showWeekNumbers
+            onDayPress={(day) => {
+              handleDatePicked(day.dateString);
+            }}
+          />
+          <Text style={{ margin: 12 }} onPress={() => setIsEditingDate(false)}>
+            Cancel
+          </Text>
+        </>
       ) : (
         <>
           <Text style={[styles.text, { margin: 12 }]}>Created at</Text>
@@ -96,20 +101,41 @@ export default function RepView({ rep, onChange }: RepViewProps) {
         Rep summary
       </Text>
       {isEditingRepSummary ? (
-        <TextInput
-          style={{ margin: 6, padding: 6 }}
-          value={repSummary}
-          onChangeText={setRepSummary}
-          onSubmitEditing={() => {
-            setIsEditingRepSummary(false);
-            onChange(repSummary, date);
-          }}
-          onBlur={() => {
-            setIsEditingRepSummary(false);
-            setRepSummary(rep.summary);
-          }}
-          autoFocus={true}
-        />
+        <View style={{ backgroundColor: "white" }}>
+          <TextInput
+            style={{ margin: 6, padding: 6, height: 150 }}
+            value={repSummary}
+            onChangeText={setRepSummary}
+            onSubmitEditing={() => {
+              setIsEditingRepSummary(false);
+              handleRepChange(repSummary, date);
+            }}
+            autoFocus={true}
+            multiline={true}
+          />
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text
+              style={{ margin: 12 }}
+              onPress={() => {
+                setRepSummary(rep.summary);
+                setIsEditingRepSummary(false);
+              }}
+            >
+              Cancel
+            </Text>
+            <Pressable
+              style={[styles.button, { margin: 12, height: 24 }]}
+              onPress={() => {
+                setIsEditingRepSummary(false);
+                handleRepChange(repSummary, date);
+              }}
+            >
+              <Text>Save</Text>
+            </Pressable>
+          </View>
+        </View>
       ) : (
         <>
           <Pressable onPress={() => setIsEditingRepSummary(true)}>
@@ -137,7 +163,7 @@ export default function RepView({ rep, onChange }: RepViewProps) {
                     onChangeText={setEditedNoteText}
                     onSubmitEditing={() => {
                       updateNoteMutation.mutate({
-                        note_id: item.id,
+                        note_id: item.id.toString(),
                         newText: editedNoteText,
                       });
                       setEditingNoteId(null);
