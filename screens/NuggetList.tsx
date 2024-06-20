@@ -1,41 +1,91 @@
+import { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { getNuggets } from "@/supabase/supabase-queries";
+import {
+  getNuggets,
+  getSupabasePractices,
+  getSupabaseUserId,
+} from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
+import { Picker } from "@react-native-picker/picker";
 
 export default function NuggetList() {
+  const [selectedPractice, setSelectedPractice] = useState("(any)");
+
+  // query nuggets
   const {
     data: nuggets,
-    error,
-    isPending,
+    error: errorNuggets,
+    isPending: isPendingNuggets,
   } = useQuery({
     queryFn: getNuggets,
     queryKey: ["nuggets"],
   });
 
-  if (isPending) return <Text>Loading nuggets...</Text>;
-  if (error)
-    return (
-      <Text>
-        Error getting nuggets: {error.name}, {error.message}
-      </Text>
-    );
+  // query: user id
+  const {
+    isPending: isPendingUser,
+    error: errorUser,
+    data: userid,
+  } = useQuery({
+    queryKey: ["userid"],
+    queryFn: getSupabaseUserId,
+  });
+
+  // query: practices
+  const {
+    isPending: isPendingPractices,
+    error: errorPractices,
+    data: practices,
+  } = useQuery({
+    queryKey: ["practices", userid],
+    queryFn: () => {
+      if (userid) {
+        const data = getSupabasePractices(userid);
+        return data;
+      }
+    },
+    enabled: !!userid,
+  });
+
+  if (isPendingNuggets || isPendingPractices || isPendingUser)
+    return <Text>Loading...</Text>;
+
+  if (errorNuggets || errorPractices || errorUser) return <Text>Error!!</Text>;
+
+  const filteredNuggets =
+    selectedPractice === "(any)"
+      ? nuggets
+      : nuggets.filter((nugget) => nugget.practice === selectedPractice);
+
   return (
-    <FlatList
-      style={styles.flatlist}
-      data={nuggets}
-      renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
-        <View style={styles.itemContainer}>
-          <Link href={"/nugget/" + item.id}>
-            <View>
-              <Text style={styles.text}>{item.title}</Text>
-              <Text style={styles.secondaryText}>{item.created_at}</Text>
-            </View>
-          </Link>
-        </View>
-      )}
-    />
+    <>
+      <Picker
+        style={{ margin: 12, padding: 6 }}
+        selectedValue={selectedPractice}
+        onValueChange={(itemValue, itemIndex) => setSelectedPractice(itemValue)}
+      >
+        <Picker.Item label="(any)" value="(any)" />
+        {practices?.map((p) => (
+          <Picker.Item key={p.id} label={p.name} value={p.name} />
+        ))}
+      </Picker>
+      <FlatList
+        style={styles.flatlist}
+        data={filteredNuggets}
+        renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
+          <View style={styles.itemContainer}>
+            <Link href={"/nugget/" + item.id}>
+              <View>
+                <Text style={styles.text}>{item.title}</Text>
+                <Text style={styles.secondaryText}>{item.created_at}</Text>
+              </View>
+            </Link>
+          </View>
+        )}
+      />
+    </>
   );
 }
 
