@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { getNugget } from "@/supabase/supabase-queries";
-import { Tables } from "@/supabase/database.types";
+import { gs } from "@/global-styles";
 
 interface Props {
   nugget_id: string;
@@ -25,41 +25,17 @@ export default function Nugget({ nugget_id }: Props) {
       </Text>
     );
   return (
-    <>
-      <Text>Id: {nugget.id}</Text>
-      <Text>Created at: {nugget.created_at}</Text>
-      <Text>Next_review: {nugget.next_review}</Text>
-      <Text>TODO: {nugget.is_todo}</Text>
-      <Text>Practice_id: {nugget.practice_id}</Text>
-      <Text>Practice: {nugget.practice}</Text>
-      <Text>Title: {nugget.title}</Text>
-      <Text>Text: {nugget.text}</Text>
-      <Text>Rating: {nugget.rating}</Text>
-      <Text>Tags: {nugget.tags}</Text>
-    </>
+    <View style={{ padding: 12 }}>
+      <Text style={gs.h2}>Created at:</Text>
+      <Text>{nugget.created_at}</Text>
+      <Text style={gs.h2}>is TODO: </Text>
+      <Text>{nugget.is_todo}</Text>
+      <Text style={gs.h2}>Practice: </Text>
+      <Text>{nugget.practice}</Text>
+      <Text style={gs.h2}>Title: </Text>
+      <Text>{nugget.title}</Text>
+      <Text style={gs.h2}>Text: </Text>
+      <Text>{nugget.text}</Text>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  flatlist: {
-    padding: 16,
-  },
-  itemContainer: {
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
-  text: {
-    fontSize: 16,
-  },
-  secondaryText: {
-    fontSize: 14,
-    color: "#888",
-    marginTop: 10,
-  },
-});
