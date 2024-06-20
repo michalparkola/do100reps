@@ -26,7 +26,7 @@ export default function Next({ practiceId }: Props) {
       body: {
         query:
           "Given my goal is to " +
-          practice.do100reps_title +
+          practice?.do100reps_title +
           "What are three things I might want to do next?",
       },
     });
