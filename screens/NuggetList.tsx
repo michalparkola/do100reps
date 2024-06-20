@@ -10,6 +10,16 @@ import {
 import { Tables } from "@/supabase/database.types";
 import { Picker } from "@react-native-picker/picker";
 
+function groupNuggetsByPractice(nuggets: any[]) {
+  return Object.entries(
+    nuggets.reduce((groups, nugget) => {
+      const { practice } = nugget;
+      (groups[practice] = groups[practice] || []).push(nugget);
+      return groups;
+    }, {})
+  ).map(([title, data]) => ({ title, data, count: data.length })) as any[];
+}
+
 export default function NuggetList() {
   const [selectedPractice, setSelectedPractice] = useState("(any)");
 
@@ -54,6 +64,9 @@ export default function NuggetList() {
 
   if (errorNuggets || errorPractices || errorUser) return <Text>Error!!</Text>;
 
+  const grouped_nuggets = groupNuggetsByPractice(nuggets ?? []);
+  console.log(grouped_nuggets);
+
   const filteredNuggets =
     selectedPractice === "(any)"
       ? nuggets
@@ -67,8 +80,12 @@ export default function NuggetList() {
         onValueChange={(itemValue, itemIndex) => setSelectedPractice(itemValue)}
       >
         <Picker.Item label="(any)" value="(any)" />
-        {practices?.map((p) => (
-          <Picker.Item key={p.id} label={p.name} value={p.name} />
+        {grouped_nuggets?.map((ng, idx) => (
+          <Picker.Item
+            key={idx}
+            label={ng.title + " (" + ng.count + ")"}
+            value={ng.title}
+          />
         ))}
       </Picker>
       <FlatList
