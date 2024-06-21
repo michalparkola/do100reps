@@ -1,23 +1,40 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getNuggets,
-  getSupabasePractices,
-  getSupabaseUserId,
-} from "@/supabase/supabase-queries";
+import { getNuggets } from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
 import { Picker } from "@react-native-picker/picker";
 
-function groupNuggetsByPractice(nuggets: any[]) {
-  return Object.entries(
-    nuggets.reduce((groups, nugget) => {
-      const { practice } = nugget;
-      (groups[practice] = groups[practice] || []).push(nugget);
-      return groups;
-    }, {})
-  ).map(([title, data]) => ({ title, data, count: data.length })) as any[];
+function groupNuggetsByPractice(nuggets: Tables<"Nuggets">[]) {
+  function reducer(
+    groups: Record<string, Tables<"Nuggets">[]>,
+    nugget: Tables<"Nuggets">
+  ) {
+    const { practice } = nugget;
+    const practiceKey = practice ?? "(none)";
+    (groups[practiceKey] = groups[practiceKey] || []).push(nugget);
+    return groups;
+  }
+
+  const reduced = nuggets.reduce(
+    reducer,
+    {} as Record<string, Tables<"Nuggets">[]>
+  );
+
+  const entries = Object.entries(reduced);
+
+  const mapped = entries.map(([title, data]) => ({
+    title,
+    data,
+    count: data.length,
+  })) as {
+    title: string;
+    data: Tables<"Nuggets">[];
+    count: number;
+  }[];
+
+  return mapped;
 }
 
 export default function NuggetList() {
@@ -33,36 +50,9 @@ export default function NuggetList() {
     queryKey: ["nuggets"],
   });
 
-  // query: user id
-  const {
-    isPending: isPendingUser,
-    error: errorUser,
-    data: userid,
-  } = useQuery({
-    queryKey: ["userid"],
-    queryFn: getSupabaseUserId,
-  });
+  if (isPendingNuggets) return <Text>Loading...</Text>;
 
-  // query: practices
-  const {
-    isPending: isPendingPractices,
-    error: errorPractices,
-    data: practices,
-  } = useQuery({
-    queryKey: ["practices", userid],
-    queryFn: () => {
-      if (userid) {
-        const data = getSupabasePractices(userid);
-        return data;
-      }
-    },
-    enabled: !!userid,
-  });
-
-  if (isPendingNuggets || isPendingPractices || isPendingUser)
-    return <Text>Loading...</Text>;
-
-  if (errorNuggets || errorPractices || errorUser) return <Text>Error!!</Text>;
+  if (errorNuggets) return <Text>Error!!</Text>;
 
   const grouped_nuggets = groupNuggetsByPractice(nuggets ?? []);
   console.log(grouped_nuggets);
@@ -77,7 +67,7 @@ export default function NuggetList() {
       <Picker
         style={{ margin: 12, padding: 6 }}
         selectedValue={selectedPractice}
-        onValueChange={(itemValue, itemIndex) => setSelectedPractice(itemValue)}
+        onValueChange={(itemValue) => setSelectedPractice(itemValue)}
       >
         <Picker.Item label="(any)" value="(any)" />
         {grouped_nuggets?.map((ng, idx) => (
