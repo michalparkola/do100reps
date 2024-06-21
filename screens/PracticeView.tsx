@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, View, FlatList, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
