@@ -1,4 +1,5 @@
 import { supabase } from "@/supabase/supabase-client";
+import { Tables } from "./database.types";
 
 export async function getSupabaseUserId() {
   const { data, error } = await supabase.auth.getUser();
@@ -122,5 +123,21 @@ export async function getNugget(nugget_id: string) {
     throw new Error(error.message);
   } else {
     return data[0];
+  }
+}
+
+export async function updateNugget(
+  new_nugget: Tables<"Nuggets">,
+) {
+  console.log("Saving nugget text!");
+  const { data, error } = await supabase
+    .from("Nuggets")
+    .update(new_nugget)
+    .eq("id", new_nugget.id);
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
   }
 }

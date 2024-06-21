@@ -15,9 +15,13 @@ export const gs = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
   },
   h2: {
-    marginTop: 12,
+    marginVertical: 12,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  label: {
+    color: "gray",
+    marginVertical: 12,
   },
   secondaryText: {
     fontSize: 14,
