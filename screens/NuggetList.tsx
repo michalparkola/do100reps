@@ -72,10 +72,7 @@ export default function NuggetList() {
           />
         ))}
       </Picker>
-      <NuggetListForPractice
-        nuggets={nuggets}
-        practice_title={selectedPractice}
-      />
+      <NuggetListForPractice practice_title={selectedPractice} />
     </>
   );
 }
