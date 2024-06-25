@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getNuggets } from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
 import { Picker } from "@react-native-picker/picker";
+import NuggetListForPractice from "@/components/NuggetListForPractice";
 
 function groupNuggetsByPractice(nuggets: Tables<"Nuggets">[]) {
   function reducer(
@@ -55,12 +56,6 @@ export default function NuggetList() {
   if (errorNuggets) return <Text>Error!!</Text>;
 
   const grouped_nuggets = groupNuggetsByPractice(nuggets ?? []);
-  console.log(grouped_nuggets);
-
-  const filteredNuggets =
-    selectedPractice === "(any)"
-      ? nuggets
-      : nuggets.filter((nugget) => nugget.practice === selectedPractice);
 
   return (
     <>
@@ -78,46 +73,10 @@ export default function NuggetList() {
           />
         ))}
       </Picker>
-      <FlatList
-        style={styles.flatlist}
-        data={filteredNuggets}
-        renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
-          <View style={styles.itemContainer}>
-            <Link href={"/nugget/" + item.id}>
-              <View>
-                <Text style={styles.text}>{item.title}</Text>
-                {(item.is_todo && (
-                  <Text style={styles.secondaryText}>TODO</Text>
-                )) || <Text style={styles.secondaryText}>Shelved</Text>}
-              </View>
-            </Link>
-          </View>
-        )}
+      <NuggetListForPractice
+        nuggets={nuggets}
+        practice_title={selectedPractice}
       />
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  flatlist: {
-    padding: 16,
-  },
-  itemContainer: {
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
-  text: {
-    fontSize: 16,
-  },
-  secondaryText: {
-    fontSize: 14,
-    color: "#888",
-    marginTop: 10,
-  },
-});
