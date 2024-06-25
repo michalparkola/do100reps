@@ -56,7 +56,10 @@ export function AddNuggetToPractice({ add_to_practice }: Props) {
         <View style={{ marginTop: 24, marginRight: 12, marginLeft: 12 }}>
           <View style={{ marginTop: 36, marginRight: 12, marginLeft: 12 }}>
             <Text style={styles.text}>New nugget title</Text>
-            <Text style={styles.secondaryText}>...</Text>
+            <Text style={styles.secondaryText}>
+              I suggest adding the main idea or source as well as the next
+              action for how to use it.
+            </Text>
             <TextInput
               style={{
                 marginTop: 12,
@@ -68,16 +71,20 @@ export function AddNuggetToPractice({ add_to_practice }: Props) {
               value={newTitle}
             />
             <Text style={styles.text}>New nugget body</Text>
-            <Text style={styles.secondaryText}>...</Text>
+            <Text style={styles.secondaryText}>
+              Any notes about the source, idea or plan.
+            </Text>
             <TextInput
               style={{
                 marginTop: 12,
                 marginBottom: 36,
                 padding: 12,
                 borderWidth: 1,
+                height: 400,
               }}
               onChangeText={(text) => setNewText(text)}
               value={newText}
+              multiline
             />
             <View
               style={{
