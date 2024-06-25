@@ -86,7 +86,9 @@ export default function NuggetList() {
             <Link href={"/nugget/" + item.id}>
               <View>
                 <Text style={styles.text}>{item.title}</Text>
-                <Text style={styles.secondaryText}>{item.created_at}</Text>
+                {(item.is_todo && (
+                  <Text style={styles.secondaryText}>TODO</Text>
+                )) || <Text style={styles.secondaryText}>Shelved</Text>}
               </View>
             </Link>
           </View>
