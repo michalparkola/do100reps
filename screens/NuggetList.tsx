@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import { Text } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { getNuggets } from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
