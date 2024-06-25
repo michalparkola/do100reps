@@ -38,8 +38,6 @@ export default function NuggetListForPractice({ practice_title }: Props) {
     ? filteredNuggets
     : filteredNuggets.filter((n) => n.is_todo);
 
-  if (nuggets.length === 0) return;
-
   return (
     <>
       <Text style={{ fontSize: 16, marginTop: 12 }}>
@@ -56,18 +54,22 @@ export default function NuggetListForPractice({ practice_title }: Props) {
           value={isEnabled}
         />
       </View>
-      <FlatList
-        data={nuggetsToShow}
-        renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
-          <View style={gs.itemContainer}>
-            <Link href={"/nugget/" + item.id}>
-              <View>
-                <Text style={gs.text}>{item.title}</Text>
-              </View>
-            </Link>
-          </View>
-        )}
-      />
+      {nuggetsToShow.length > 0 ? (
+        <FlatList
+          data={nuggetsToShow}
+          renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
+            <View style={gs.itemContainer}>
+              <Link href={"/nugget/" + item.id}>
+                <View>
+                  <Text style={gs.text}>{item.title}</Text>
+                </View>
+              </Link>
+            </View>
+          )}
+        />
+      ) : (
+        <Text style={{ margin: 12 }}>No nuggets to show</Text>
+      )}
     </>
   );
 }
