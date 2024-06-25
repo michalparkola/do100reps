@@ -8,28 +8,36 @@ import {
   StyleSheet,
 } from "react-native";
 import { supabase } from "@/supabase/supabase-client";
+import { Tables } from "@/supabase/database.types";
 import { useQueryClient } from "@tanstack/react-query";
 
-export function AddPractice() {
+interface Props {
+  add_to_practice: Tables<"Practices">;
+}
+
+export function AddNuggetToPractice({ add_to_practice }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [newPracticeName, setNewPracticeName] = useState("");
-  const [newPracticeTitle, setNewPracticeTitle] = useState("");
+  const [newTitle, setNewTitle] = useState("");
+  const [newText, setNewText] = useState("");
 
   const queryClient = useQueryClient();
 
-  async function createNewPractice() {
-    if (!newPracticeName || !newPracticeTitle) return;
+  async function createNewNugget() {
+    if (!newTitle || !newText) return;
 
-    const { error } = await supabase
-      .from("Practices")
-      .insert({ name: newPracticeName, do100reps_title: newPracticeTitle });
+    const { error } = await supabase.from("Nuggets").insert({
+      title: newTitle,
+      text: newText,
+      practice_id: add_to_practice.id,
+      practice: add_to_practice.name,
+    });
 
-    console.log(newPracticeName);
-    console.log(newPracticeTitle);
+    console.log(newTitle);
+    console.log(newText);
 
     if (!error) {
       setModalVisible(false);
-      queryClient.invalidateQueries({ queryKey: ["practices"] });
+      queryClient.invalidateQueries({ queryKey: ["nuggets"] });
     } else {
       console.error(error);
     }
@@ -47,10 +55,8 @@ export function AddPractice() {
       >
         <View style={{ marginTop: 24, marginRight: 12, marginLeft: 12 }}>
           <View style={{ marginTop: 36, marginRight: 12, marginLeft: 12 }}>
-            <Text style={styles.text}>New practice short name</Text>
-            <Text style={styles.secondaryText}>
-              Used as additional heading in practice list.
-            </Text>
+            <Text style={styles.text}>New nugget title</Text>
+            <Text style={styles.secondaryText}>...</Text>
             <TextInput
               style={{
                 marginTop: 12,
@@ -58,14 +64,11 @@ export function AddPractice() {
                 padding: 12,
                 borderWidth: 1,
               }}
-              onChangeText={(text) => setNewPracticeName(text)}
-              value={newPracticeName}
+              onChangeText={(text) => setNewTitle(text)}
+              value={newTitle}
             />
-            <Text style={styles.text}>New practice title</Text>
-            <Text style={styles.secondaryText}>
-              For best results describe the unit of progress (what you consider
-              one rep) and the goal of doing them.
-            </Text>
+            <Text style={styles.text}>New nugget body</Text>
+            <Text style={styles.secondaryText}>...</Text>
             <TextInput
               style={{
                 marginTop: 12,
@@ -73,8 +76,8 @@ export function AddPractice() {
                 padding: 12,
                 borderWidth: 1,
               }}
-              onChangeText={(text) => setNewPracticeTitle(text)}
-              value={newPracticeTitle}
+              onChangeText={(text) => setNewText(text)}
+              value={newText}
             />
             <View
               style={{
@@ -89,24 +92,21 @@ export function AddPractice() {
               >
                 <Text>Cancel</Text>
               </Pressable>
-              <Pressable
-                onPress={createNewPractice}
-                style={[styles.button, { width: 100 }]}
-              >
+              <Pressable onPress={createNewNugget} style={styles.button}>
                 <Text>Save</Text>
               </Pressable>
             </View>
           </View>
         </View>
       </Modal>
-      <View style={{ alignItems: "flex-end", margin: 12 }}>
+      <View style={{ margin: 12, width: 150 }}>
         <Pressable
           style={styles.button}
           onPress={() => {
             setModalVisible(true);
           }}
         >
-          <Text>Add Practice</Text>
+          <Text>Add Nugget</Text>
         </Pressable>
       </View>
     </>

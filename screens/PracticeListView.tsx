@@ -1,21 +1,23 @@
+import React from "react";
 import { View, Text, SectionList, StyleSheet } from "react-native";
 import { Link } from "expo-router";
 import {
   getSupabaseUserId,
   getSupabasePractices,
 } from "@/supabase/supabase-queries";
+import { Tables } from "@/supabase/database.types";
 import PracticeGrid from "@/components/PracticeGrid";
 import { AddPractice } from "./AddPractice";
 import { useQuery } from "@tanstack/react-query";
 
-function groupPracticesByCategory(practices: any[]) {
+function groupPracticesByCategory(practices: Tables<"Practices">[]) {
   return Object.entries(
     practices.reduce((groups, practice) => {
       const { category } = practice;
       (groups[category] = groups[category] || []).push(practice);
       return groups;
     }, {})
-  ).map(([title, data]) => ({ title, data })) as any[];
+  ).map(([title, data]) => ({ title, data }));
 }
 
 export default function PracticeList() {

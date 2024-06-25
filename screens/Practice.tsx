@@ -11,6 +11,7 @@ import EditablePracticeTitle from "../components/EditablePracticeTitle";
 import PracticeProgress from "../components/PracticeProgress";
 import NextRep from "../components/NextRep";
 import NuggetListForPractice from "@/components/NuggetListForPractice";
+import { AddNuggetToPractice } from "./AddNugget";
 
 interface Props {
   practiceId: string;
@@ -53,6 +54,7 @@ export default function PracticeView({ practiceId }: Props) {
           />
           <PracticeProgress completed_reps_count={reps.length} />
           <NuggetListForPractice practice_title={practice.name} />
+          <AddNuggetToPractice add_to_practice={practice} />
           <NextRep practice_id={practiceId} next_rep_cnt={reps.length + 1} />
         </View>
       }
