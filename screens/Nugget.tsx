@@ -5,6 +5,7 @@ import { getNugget, updateNugget } from "@/supabase/supabase-queries";
 import { gs } from "@/global-styles";
 import EditableTextInputWithCancelSave from "@/components/EditableTextInputWithCancelSave";
 import { Tables } from "@/supabase/database.types";
+import EditableTODOSwitch from "@/components/EditableTODOSwitch";
 
 interface Props {
   nugget_id: string;
@@ -38,11 +39,12 @@ export default function Nugget({ nugget_id }: Props) {
     );
   return (
     <ScrollView contentContainerStyle={{ margin: 12 }}>
-      {nugget.is_todo ? (
-        <Text style={{ margin: 12 }}>TODO</Text>
-      ) : (
-        <Text>Shelved</Text>
-      )}
+      <EditableTODOSwitch
+        is_todo={nugget.is_todo}
+        handleToggle={() => {
+          updateNuggetMutation.mutate({ ...nugget, is_todo: !nugget.is_todo });
+        }}
+      />
       <Text style={gs.label}>Created at</Text>
       <Text style={{ margin: 12 }}>{nugget.created_at}</Text>
       <Text style={gs.label}>Practice</Text>
