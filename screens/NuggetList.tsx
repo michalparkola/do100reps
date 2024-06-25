@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text } from "react-native";
+import { View, Text } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { getNuggets } from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
@@ -72,7 +72,9 @@ export default function NuggetList() {
           />
         ))}
       </Picker>
-      <NuggetListForPractice practice_title={selectedPractice} />
+      <View style={{ margin: 12 }}>
+        <NuggetListForPractice practice_title={selectedPractice} />
+      </View>
     </>
   );
 }
