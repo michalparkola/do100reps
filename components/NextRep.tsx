@@ -1,12 +1,5 @@
-import { useState } from "react";
-import {
-  Text,
-  TextInput,
-  StyleSheet,
-  View,
-  Keyboard,
-  Pressable,
-} from "react-native";
+import React, { useState } from "react";
+import { Text, TextInput, StyleSheet, Keyboard, Pressable } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/supabase/supabase-client";
 
@@ -63,10 +56,7 @@ export default function NextRep({ practice_id, next_rep_cnt }: Props) {
         value={nextRepText}
       />
 
-      <Pressable
-        style={styles.button}
-        onPress={(e) => nextRepMutation.mutate()}
-      >
+      <Pressable style={styles.button} onPress={() => nextRepMutation.mutate()}>
         <Text style={styles.text}>Record the next rep</Text>
       </Pressable>
     </>
