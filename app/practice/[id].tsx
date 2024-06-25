@@ -1,5 +1,6 @@
+import React from "react";
 import { useLocalSearchParams, Stack } from "expo-router";
-import PracticeView from "@/screens/PracticeView";
+import PracticeView from "@/screens/Practice";
 import { Text } from "react-native";
 
 export default function Practice() {

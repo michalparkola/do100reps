@@ -47,8 +47,8 @@ export default function PracticeView({ practiceId }: Props) {
       ListHeaderComponent={
         <View style={{ marginBottom: 12 }}>
           <EditablePracticeTitle
-            practice_id={practice.id}
-            practice_title={practice.do100reps_title}
+            practice_id={practice.id.toString()}
+            practice_title={practice.do100reps_title ?? ""}
           />
           <PracticeProgress completed_reps_count={reps.length} />
           <NextRep practice_id={practiceId} next_rep_cnt={reps.length + 1} />
