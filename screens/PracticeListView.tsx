@@ -13,10 +13,10 @@ import { useQuery } from "@tanstack/react-query";
 function groupPracticesByCategory(practices: Tables<"Practices">[]) {
   return Object.entries(
     practices.reduce((groups, practice) => {
-      const { category } = practice;
+      const category = practice.category ?? "Uncategorized";
       (groups[category] = groups[category] || []).push(practice);
       return groups;
-    }, {})
+    }, {} as Record<string, Tables<"Practices">[]>)
   ).map(([title, data]) => ({ title, data }));
 }
 
@@ -57,7 +57,7 @@ export default function PracticeList() {
       <SectionList
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
         sections={categories}
-        keyExtractor={(item) => item.do100reps_title}
+        keyExtractor={(item) => item.do100reps_title ?? "No title"}
         renderItem={({ item }) => (
           <Link href={"/practice/" + item.id}>
             <View style={styles.card}>
