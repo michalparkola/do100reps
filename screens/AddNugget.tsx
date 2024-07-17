@@ -113,7 +113,7 @@ export function AddNuggetToPractice({ add_to_practice }: Props) {
             setModalVisible(true);
           }}
         >
-          <Text>Add Nugget</Text>
+          <Text>Add Recipe</Text>
         </Pressable>
       </View>
     </>
