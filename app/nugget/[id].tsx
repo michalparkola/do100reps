@@ -1,11 +1,12 @@
+import React from "react";
 import { Text } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
-import Nugget from "@/screens/Nugget";
+import Recipe from "@/screens/Recipe";
 
 export default function NuggetScreen() {
   const { id: nugget_id } = useLocalSearchParams<{ id: string }>();
 
-  if (!nugget_id) return <Text>No nugget selected</Text>;
+  if (!nugget_id) return <Text>No recipe selected</Text>;
 
   return (
     <>
@@ -14,7 +15,7 @@ export default function NuggetScreen() {
           title: "Turn this idea into action!",
         }}
       />
-      <Nugget nugget_id={nugget_id} />
+      <Recipe nugget_id={nugget_id} />
     </>
   );
 }

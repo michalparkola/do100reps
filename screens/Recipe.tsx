@@ -11,7 +11,7 @@ interface Props {
   nugget_id: string;
 }
 
-export default function Nugget({ nugget_id }: Props) {
+export default function Recipe({ nugget_id }: Props) {
   const queryClient = useQueryClient();
 
   // Query: nugget_id
@@ -30,11 +30,11 @@ export default function Nugget({ nugget_id }: Props) {
       queryClient.invalidateQueries({ queryKey: ["nugget", nugget_id] }),
   });
 
-  if (isPending) return <Text>Loading nugget...</Text>;
+  if (isPending) return <Text>Loading recipe...</Text>;
   if (error)
     return (
       <Text>
-        Error getting nugget: {error.name}, {error.message}
+        Error getting recipe: {error.name}, {error.message}
       </Text>
     );
   return (
