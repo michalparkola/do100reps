@@ -15,7 +15,7 @@ interface Props {
   add_to_practice: Tables<"Practices">;
 }
 
-export function AddNuggetToPractice({ add_to_practice }: Props) {
+export function AddRecipeToPractice({ add_to_practice }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newText, setNewText] = useState("");
@@ -32,10 +32,9 @@ export function AddNuggetToPractice({ add_to_practice }: Props) {
       practice: add_to_practice.name,
     });
 
-    console.log(newTitle);
-    console.log(newText);
-
     if (!error) {
+      setNewTitle("");
+      setNewText("");
       setModalVisible(false);
       queryClient.invalidateQueries({ queryKey: ["nuggets"] });
     } else {
@@ -94,7 +93,11 @@ export function AddNuggetToPractice({ add_to_practice }: Props) {
               }}
             >
               <Pressable
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  setNewTitle("");
+                  setNewText("");
+                  setModalVisible(false);
+                }}
                 style={{ margin: 12 }}
               >
                 <Text>Cancel</Text>
