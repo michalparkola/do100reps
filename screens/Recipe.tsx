@@ -26,8 +26,10 @@ export default function Recipe({ nugget_id }: Props) {
 
   const updateNuggetMutation = useMutation({
     mutationFn: (new_nugget: Tables<"Nuggets">) => updateNugget(new_nugget),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["nugget", nugget_id] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["nugget", nugget_id] });
+      queryClient.invalidateQueries({ queryKey: ["nuggets"] });
+    },
   });
 
   if (isPending) return <Text>Loading recipe...</Text>;
