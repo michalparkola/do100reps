@@ -41,10 +41,10 @@ export default function NuggetListForPractice({ practice_title }: Props) {
   return (
     <>
       <Text style={{ fontSize: 16, marginTop: 12 }}>
-        Apply ideas from recipies to your next rep:
+        Apply ideas from recipes to your next rep:
       </Text>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 12 }}>
-        <Text>Also show shelved recipies:</Text>
+        <Text>Also show shelved recipes:</Text>
         <Switch
           style={{ marginLeft: 12 }}
           trackColor={{ false: "#767577", true: "#81b0ff" }}
@@ -68,7 +68,7 @@ export default function NuggetListForPractice({ practice_title }: Props) {
           )}
         />
       ) : (
-        <Text style={{ margin: 12 }}>No recipies to show</Text>
+        <Text style={{ margin: 12 }}>No recipes to show</Text>
       )}
     </>
   );
