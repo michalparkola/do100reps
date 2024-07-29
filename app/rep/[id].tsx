@@ -1,8 +1,9 @@
-import { useLocalSearchParams, Stack } from "expo-router";
+import React from "react";
 import { useState, useEffect } from "react";
 import { Text, Keyboard } from "react-native";
+import { useLocalSearchParams, Stack } from "expo-router";
 import { supabase } from "@/supabase/supabase-client";
-import RepView from "@/screens/RepView";
+import Rep from "@/screens/Rep";
 
 interface Rep {
   id: string;
@@ -25,7 +26,7 @@ export default function Practice() {
         await supabase.auth.getUser();
 
       let userId = null;
-      if (userData && userData.user && !userError) {
+      if (id && userData && userData.user && !userError) {
         userId = userData.user.id;
       } else throw userError;
 
@@ -38,7 +39,7 @@ export default function Practice() {
       if (repError) throw repError;
 
       if (repData) {
-        setRep(repData[0]);
+        setRep({ ...repData[0], id: repData[0].id.toString() });
       }
     } catch (error) {
       console.error(error);
@@ -70,7 +71,7 @@ export default function Practice() {
         }}
       />
       {rep ? (
-        <RepView rep={rep} handleRepChange={updateRepInSupabase} />
+        <Rep rep={rep} handleRepChange={updateRepInSupabase} />
       ) : (
         <Text>Loading...</Text>
       )}

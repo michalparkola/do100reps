@@ -28,7 +28,7 @@ interface RepViewProps {
   handleRepChange: (newRepSummary: string, newRepDate: string) => void;
 }
 
-export default function RepView({ rep, handleRepChange }: RepViewProps) {
+export default function Rep({ rep, handleRepChange }: RepViewProps) {
   const [isEditingRepSummary, setIsEditingRepSummary] = useState(false);
   const [repSummary, setRepSummary] = useState(rep.summary);
 
