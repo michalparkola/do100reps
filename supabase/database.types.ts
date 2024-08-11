@@ -86,6 +86,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      Programs: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          id: number;
+          is_shelved: boolean;
+          practice: number;
+          title: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          id?: number;
+          is_shelved?: boolean;
+          practice: number;
+          title: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          id?: number;
+          is_shelved?: boolean;
+          practice?: number;
+          title?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "LearningStories_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Stories_practice_fkey";
+            columns: ["practice"];
+            isOneToOne: false;
+            referencedRelation: "Practices";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       RepNotes: {
         Row: {
           author_id: string | null;

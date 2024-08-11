@@ -141,3 +141,16 @@ export async function updateNugget(
     return data;
   }
 }
+
+export async function getSupabasePrograms() {
+  const { data, error } = await supabase
+    .from("Programs")
+    .select()
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
+  }
+}
