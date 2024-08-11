@@ -8,7 +8,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import { Calendar } from "react-native-calendars";
+import { Calendar, DateData } from "react-native-calendars";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getNotesByRepId,
@@ -78,7 +78,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
         <>
           <Calendar
             showWeekNumbers
-            onDayPress={(day) => {
+            onDayPress={(day: DateData) => {
               handleDatePicked(day.dateString);
             }}
           />
