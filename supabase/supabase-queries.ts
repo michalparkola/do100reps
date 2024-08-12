@@ -154,3 +154,24 @@ export async function getSupabasePrograms() {
     return data;
   }
 }
+
+export async function getSupabaseProgramById(programId: number) {
+  const { data: program, error: programError } = await supabase
+    .from("Programs")
+    .select()
+    .eq("id", programId);
+
+  if (programError) {
+    throw new Error(programError.message);
+  } else {
+    const { data: activities, error: activitiesError } = await supabase
+      .from("Activities")
+      .select()
+      .eq("program_id", programId);
+    if (activitiesError) {
+      throw new Error(activitiesError.message);
+    } else {
+      return { ...program[0], activities: activities };
+    }
+  }
+}

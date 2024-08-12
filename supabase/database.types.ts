@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      Activities: {
+        Row: {
+          description: string | null;
+          id: number;
+          program: number;
+          related_reps: number[] | null;
+          title: string;
+          user_id: string;
+        };
+        Insert: {
+          description?: string | null;
+          id?: number;
+          program: number;
+          related_reps?: number[] | null;
+          title: string;
+          user_id?: string;
+        };
+        Update: {
+          description?: string | null;
+          id?: number;
+          program?: number;
+          related_reps?: number[] | null;
+          title?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Activities_program_fkey";
+            columns: ["program"];
+            isOneToOne: false;
+            referencedRelation: "Programs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       Nuggets: {
         Row: {
           created_at: string;
@@ -95,6 +130,7 @@ export type Database = {
           practice: number;
           title: string;
           user_id: string;
+          activities: Tables<"Activities">[];
         };
         Insert: {
           created_at?: string;
