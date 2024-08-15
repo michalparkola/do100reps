@@ -1,3 +1,4 @@
+import React from "react";
 import { Stack } from "expo-router";
 import { Text, Pressable } from "react-native";
 import { handleLogout } from "@/supabase/supabase-client";

@@ -1,3 +1,4 @@
+import React from "react";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { Text } from "react-native";
 import Next from "@/screens/Next";

@@ -1,3 +1,4 @@
+import React from "react";
 import PracticeReview from "@/screens/PracticeReview";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { View, Text } from "react-native";
