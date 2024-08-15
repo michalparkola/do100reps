@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, FlatList, StyleSheet } from "react-native";
+import { Text, View, FlatList } from "react-native";
 import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -45,7 +45,7 @@ export default function PracticeView({ practiceId }: Props) {
 
   return (
     <FlatList
-      style={styles.list}
+      style={{ padding: 12 }}
       data={reps}
       ListHeaderComponent={
         <View style={{ marginBottom: 12 }}>
@@ -74,9 +74,3 @@ export default function PracticeView({ practiceId }: Props) {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  list: {
-    padding: 16,
-  },
-});
