@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Text, TextInput, StyleSheet, Pressable } from "react-native";
+import { Text, TextInput, Pressable } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getSupabasePracticeById,
   savePracticeTitle,
 } from "@/supabase/supabase-queries";
+import { gs } from "@/global-styles";
 
 interface Props {
   practice_id: string;
@@ -43,13 +44,13 @@ export default function EditablePracticeTitle({
   if (!isEditing) {
     return (
       <Pressable onPress={() => setEditing(true)}>
-        <Text style={styles.title}>{practice.do100reps_title}</Text>
+        <Text style={gs.bigTitle}>{practice.do100reps_title}</Text>
       </Pressable>
     );
   }
   return (
     <TextInput
-      style={styles.title}
+      style={gs.bigTitle}
       value={editedTitle}
       onChangeText={setEditedTitle}
       onSubmitEditing={() => {
@@ -60,11 +61,3 @@ export default function EditablePracticeTitle({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 40,
-    fontWeight: "bold",
-    marginBottom: 12,
-  },
-});
