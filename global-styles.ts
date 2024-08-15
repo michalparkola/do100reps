@@ -6,6 +6,24 @@ export const gs = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 12,
   },
+  repContainer: {
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+  },
+  repText: {
+    fontSize: 16,
+  },
+  repSecondaryText: {
+    fontSize: 14,
+    color: "#888",
+    marginTop: 10,
+  },
   button: {
     backgroundColor: "lightgreen",
     paddingVertical: 10,

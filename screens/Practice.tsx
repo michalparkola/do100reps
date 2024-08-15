@@ -12,6 +12,7 @@ import PracticeProgress from "../components/PracticeProgress";
 import NextRep from "../components/NextRep";
 import NuggetListForPractice from "@/components/NuggetListForPractice";
 import { AddRecipeToPractice } from "./AddRecipe";
+import { gs } from "@/global-styles";
 
 interface Props {
   practiceId: string;
@@ -59,11 +60,11 @@ export default function PracticeView({ practiceId }: Props) {
         </View>
       }
       renderItem={({ item, index }) => (
-        <View style={styles.repContainer}>
+        <View style={gs.repContainer}>
           <Link href={"/rep/" + item.id}>
             <View>
-              <Text style={styles.repText}>{item.summary}</Text>
-              <Text style={styles.repSecondaryText}>
+              <Text style={gs.repText}>{item.summary}</Text>
+              <Text style={gs.repSecondaryText}>
                 Rep {reps.length - index} {item.created_at}{" "}
               </Text>
             </View>
@@ -77,23 +78,5 @@ export default function PracticeView({ practiceId }: Props) {
 const styles = StyleSheet.create({
   list: {
     padding: 16,
-  },
-  repContainer: {
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
-  repText: {
-    fontSize: 16,
-  },
-  repSecondaryText: {
-    fontSize: 14,
-    color: "#888",
-    marginTop: 10,
   },
 });
