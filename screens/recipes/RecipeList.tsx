@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getNuggets } from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
 import { Picker } from "@react-native-picker/picker";
-import NuggetListForPractice from "@/components/NuggetListForPractice";
+import RecipeListForPractice from "@/screens/recipes/RecipeListForPractice";
 
 function groupNuggetsByPractice(nuggets: Tables<"Nuggets">[]) {
   function reducer(
@@ -37,7 +37,7 @@ function groupNuggetsByPractice(nuggets: Tables<"Nuggets">[]) {
   return mapped;
 }
 
-export default function NuggetList() {
+export default function RecipeList() {
   const [selectedPractice, setSelectedPractice] = useState("(any)");
 
   // query nuggets
@@ -73,7 +73,7 @@ export default function NuggetList() {
         ))}
       </Picker>
       <View style={{ margin: 12 }}>
-        <NuggetListForPractice practice_title={selectedPractice} />
+        <RecipeListForPractice practice_title={selectedPractice} />
       </View>
     </>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
-import PracticeReview from "@/screens/PracticeReview";
+import PracticeReview from "@/screens/practice/PracticeReview";
 
 export default function Practice() {
   const { rest } = useLocalSearchParams<{ rest: string[] }>();

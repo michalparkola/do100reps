@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import PracticeGrid from "@/components/PracticeGrid";
+import PracticeGrid from "@/screens/practice/PracticeGrid";
 
 interface Props {
   completed_reps_count: number;

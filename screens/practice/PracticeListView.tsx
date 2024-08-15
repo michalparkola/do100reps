@@ -6,7 +6,7 @@ import {
   getSupabasePractices,
 } from "@/supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
-import PracticeGrid from "@/components/PracticeGrid";
+import PracticeGrid from "@/screens/practice/PracticeGrid";
 import { AddPractice } from "./AddPractice";
 import { useQuery } from "@tanstack/react-query";
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { Stack } from "expo-router";
-import NuggetList from "@/screens/NuggetList";
+import RecipeList from "@/screens/recipes/RecipeList";
 
-export default function Nuggets() {
+export default function RecipesRoute() {
   return (
     <>
       <Stack.Screen
@@ -10,7 +10,7 @@ export default function Nuggets() {
           title: "Learn just enough to do something interesting",
         }}
       />
-      <NuggetList />
+      <RecipeList />
     </>
   );
 }

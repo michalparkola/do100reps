@@ -10,7 +10,7 @@ interface Props {
   practice_title: string;
 }
 
-export default function NuggetListForPractice({ practice_title }: Props) {
+export default function RecipeListForPractice({ practice_title }: Props) {
   const [isEnabled, setIsEnabled] = useState(false);
   function toggleSwitch() {
     setIsEnabled((previousState) => !previousState);
@@ -59,7 +59,7 @@ export default function NuggetListForPractice({ practice_title }: Props) {
           data={nuggetsToShow}
           renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
             <View style={gs.itemContainer}>
-              <Link href={"/nugget/" + item.id}>
+              <Link href={"/recipe/" + item.id}>
                 <View>
                   <Text style={gs.text}>{item.title}</Text>
                 </View>

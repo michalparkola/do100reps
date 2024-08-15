@@ -7,11 +7,11 @@ import {
   getSupabaseRepsByPracticeId,
 } from "@/supabase/supabase-queries";
 
-import EditablePracticeTitle from "../components/EditablePracticeTitle";
-import PracticeProgress from "../components/PracticeProgress";
-import NextRep from "../components/NextRep";
-import NuggetListForPractice from "@/components/NuggetListForPractice";
-import { AddRecipeToPractice } from "./AddRecipe";
+import EditablePracticeTitle from "./EditablePracticeTitle";
+import PracticeProgress from "./PracticeProgress";
+import NextRep from "./NextRep";
+import RecipeListForPractice from "@/screens/recipes/RecipeListForPractice";
+import { AddRecipeToPractice } from "../recipes/AddRecipe";
 import { gs } from "@/global-styles";
 
 interface Props {
@@ -54,7 +54,7 @@ export default function PracticeView({ practiceId }: Props) {
             practice_title={practice.do100reps_title ?? ""}
           />
           <PracticeProgress completed_reps_count={reps.length} />
-          <NuggetListForPractice practice_title={practice.name} />
+          <RecipeListForPractice practice_title={practice.name} />
           <AddRecipeToPractice add_to_practice={practice} />
           <NextRep practice_id={practiceId} next_rep_cnt={reps.length + 1} />
         </View>

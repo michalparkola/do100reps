@@ -1,8 +1,8 @@
 import React from "react";
 import { Stack } from "expo-router";
-import Programs from "@/screens/Programs";
+import Programs from "@/screens/programs/Programs";
 
-export default function Nuggets() {
+export default function ProgramRoute() {
   return (
     <>
       <Stack.Screen

@@ -4,7 +4,7 @@ import { Text, View, FlatList } from "react-native";
 import { supabase } from "@/supabase/supabase-client";
 import { Tables } from "@/supabase/database.types";
 import { gs } from "@/global-styles";
-import PracticeProgress from "@/components/PracticeProgress";
+import PracticeProgress from "@/screens/practice/PracticeProgress";
 
 interface Props {
   userId: string;
