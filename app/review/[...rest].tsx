@@ -1,21 +1,21 @@
 import React from "react";
-import PracticeReview from "@/screens/PracticeReview";
+import { Text } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
-import { View, Text } from "react-native";
+import PracticeReview from "@/screens/PracticeReview";
 
 export default function Practice() {
   const { rest } = useLocalSearchParams<{ rest: string[] }>();
 
-  if (!rest) return <Text>Error!</Text>;
+  if (!rest) return <Text>No user and practice identified!</Text>;
 
   return (
-    <View>
+    <>
       <Stack.Screen
         options={{
           title: "Review Practice",
         }}
       />
       <PracticeReview userId={rest[0]} practiceId={rest[1]} />
-    </View>
+    </>
   );
 }

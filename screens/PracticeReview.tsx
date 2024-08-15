@@ -1,7 +1,10 @@
 import React from "react";
-import { Text, View, FlatList, ScrollView } from "react-native";
-import PracticeGrid from "@/components/PracticeGrid";
+import { Text, View, FlatList } from "react-native";
+
 import { supabase } from "@/supabase/supabase-client";
+import { Tables } from "@/supabase/database.types";
+import { gs } from "@/global-styles";
+import PracticeProgress from "@/components/PracticeProgress";
 
 interface Props {
   userId: string;
@@ -10,11 +13,13 @@ interface Props {
 
 export default function PracticeReview({ userId, practiceId }: Props) {
   // TODO check if valid practiceId
+  // TODO use React Query and a custom hook to get reps and practice info
 
   const [isLoading, setIsLoading] = React.useState(true);
-  const [nextRep, setNextRep] = React.useState<number>(1);
-  const [practice, setPractice] = React.useState<any>(null);
-  const [reps, setReps] = React.useState<any[]>([]);
+  const [practice, setPractice] = React.useState<Tables<"Practices"> | null>(
+    null
+  );
+  const [reps, setReps] = React.useState<Tables<"Reps">[]>([]);
 
   React.useEffect(() => {
     getRepsFromSupabase();
@@ -28,21 +33,18 @@ export default function PracticeReview({ userId, practiceId }: Props) {
         .eq("user_id", userId)
         .eq("id", practiceId);
 
-      let practiceName = null;
       if (practicePromise.data) {
         setPractice(practicePromise.data[0]);
-        practiceName = practicePromise.data[0].name;
       }
 
       const repsPromise = await supabase
         .from("Reps")
         .select()
-        .eq("practice", practiceName)
+        .eq("practice_id", practiceId)
         .eq("user_id", userId)
         .order("created_at", { ascending: true });
 
       if (repsPromise.data) {
-        setNextRep(repsPromise.data.length + 1);
         setReps(repsPromise.data.reverse());
       }
 
@@ -55,54 +57,26 @@ export default function PracticeReview({ userId, practiceId }: Props) {
   if (isLoading) return <Text>Loading...</Text>;
 
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 40,
-          fontWeight: "bold",
-          marginLeft: 12,
-          marginBottom: 12,
-        }}
-      >
-        {practice.do100reps_title}
-      </Text>
+    <FlatList
+      style={{ padding: 12 }}
+      ListHeaderComponent={
+        <View style={{ marginBottom: 12 }}>
+          {practice && (
+            <Text style={gs.bigTitle}>{practice.do100reps_title}</Text>
+          )}
 
-      <View style={{ flexDirection: "row" }}>
-        <View style={{ marginLeft: 12 }}>
-          <PracticeGrid nextRep={nextRep} size={10} />
+          <PracticeProgress completed_reps_count={reps.length} />
         </View>
-        <Text style={{ fontSize: 32, marginLeft: 12 }}>
-          Next rep {nextRep.toString()}/100
-        </Text>
-      </View>
-
-      <FlatList
-        style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
-        data={reps}
-        renderItem={({ item, index }) => (
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 5,
-              padding: 12,
-              marginBottom: 12,
-              elevation: 5,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-              }}
-            >
-              Rep {nextRep - 1 - index} ({item.created_at}): {item.summary}
-            </Text>
-          </View>
-        )}
-      />
-    </ScrollView>
+      }
+      data={reps}
+      renderItem={({ item, index }) => (
+        <View style={gs.repContainer}>
+          <Text style={gs.repText}>{item.summary}</Text>
+          <Text style={gs.repSecondaryText}>
+            Rep {reps.length - index} {item.created_at}{" "}
+          </Text>
+        </View>
+      )}
+    />
   );
 }
