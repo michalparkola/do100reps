@@ -2,7 +2,6 @@ import React from "react";
 import { Stack } from "expo-router";
 import { Text, Pressable } from "react-native";
 import { handleLogout } from "@/supabase/supabase-client";
-import { HeaderButtonProps } from "@react-navigation/native-stack/lib/typescript/src/types";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -18,7 +17,7 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: "lightgreen" },
-          headerRight: (props: HeaderButtonProps) => {
+          headerRight: () => {
             return (
               <Pressable onPress={handleLogout}>
                 <Text style={{ marginRight: 12 }}>Logout</Text>
