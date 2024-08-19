@@ -1,11 +1,8 @@
 import React from "react";
 import { Text, View, FlatList } from "react-native";
 import { Link } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
-import {
-  getSupabasePracticeById,
-  getSupabaseRepsByPracticeId,
-} from "@/supabase/supabase-queries";
+import { usePractice } from "@/hooks/usePractice";
+import { useReps } from "@/hooks/useReps";
 
 import EditablePracticeTitle from "./EditablePracticeTitle";
 import PracticeProgress from "./PracticeProgress";
@@ -19,26 +16,17 @@ interface Props {
 }
 
 export default function PracticeView({ practiceId }: Props) {
-  // query: practice
   const {
     isPending: isPendingPractice,
     error: errorPractice,
     data: practice,
-  } = useQuery({
-    queryKey: ["practice", practiceId],
-    queryFn: () => getSupabasePracticeById(practiceId),
-  });
+  } = usePractice(practiceId);
 
-  // query: reps
   const {
     isPending: isPendingReps,
     error: errorReps,
     data: reps,
-  } = useQuery({
-    queryKey: ["reps", practiceId],
-    queryFn: () => getSupabaseRepsByPracticeId(practiceId),
-    enabled: !!practice,
-  });
+  } = useReps(practiceId);
 
   if (isPendingPractice || errorPractice) return <Text>Loading...</Text>;
   if (isPendingReps || errorReps) return <Text>Loading...</Text>;
