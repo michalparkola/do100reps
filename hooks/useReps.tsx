@@ -6,5 +6,6 @@ export function useReps(practiceId: string): UseQueryResult<Tables<"Reps">[]> {
   return useQuery({
     queryKey: ["reps", practiceId],
     queryFn: () => getSupabaseRepsByPracticeId(practiceId),
+    enabled: !!practiceId,
   });
 }

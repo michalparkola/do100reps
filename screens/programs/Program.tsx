@@ -1,19 +1,28 @@
 import React from "react";
 import { View, ScrollView, Text, FlatList, StyleSheet } from "react-native";
-import useProgram from "@/hooks/useProgram";
+import { useProgram } from "@/hooks/useProgram";
+import { useReps } from "@/hooks/useReps";
 
 interface ProgramProps {
   programId: string;
 }
 
 export default function Program({ programId }: ProgramProps) {
-  // query: program
-  const { isPending, error, data: program } = useProgram(Number(programId));
+  const {
+    isPending: isPendingProgram,
+    error: errorProgram,
+    data: program,
+  } = useProgram(programId);
+  const {
+    isPending: isPendingReps,
+    error: errorReps,
+    data: reps,
+  } = useReps(String(program?.practice ?? ""));
 
-  if (isPending) return <Text>Loading ...</Text>;
-  if (error) return <Text>Error ...</Text>;
+  if (isPendingProgram || isPendingReps) return <Text>Loading ...</Text>;
+  if (errorProgram || errorReps) return <Text>Error ...</Text>;
 
-  console.log(program);
+  console.log(reps);
 
   return (
     <ScrollView>

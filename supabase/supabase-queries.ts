@@ -155,7 +155,7 @@ export async function getSupabasePrograms() {
   }
 }
 
-export async function getSupabaseProgramById(programId: number) {
+export async function getSupabaseProgramById(programId: string) {
   const { data: program, error: programError } = await supabase
     .from("Programs")
     .select()
