@@ -1,15 +1,15 @@
 import React from "react";
 import { Text, View, FlatList } from "react-native";
-import { Link } from "expo-router";
+
 import { usePractice } from "@/hooks/usePractice";
 import { useReps } from "@/hooks/useReps";
 
 import EditablePracticeTitle from "./EditablePracticeTitle";
 import PracticeProgress from "./PracticeProgress";
 import NextRep from "./NextRep";
+import RepCard from "./RepCard";
 import RecipeListForPractice from "@/screens/recipes/RecipeListForPractice";
 import { AddRecipeToPractice } from "../recipes/AddRecipe";
-import { gs } from "@/global-styles";
 
 interface Props {
   practiceId: string;
@@ -48,16 +48,7 @@ export default function PracticeView({ practiceId }: Props) {
         </View>
       }
       renderItem={({ item, index }) => (
-        <View style={gs.repContainer}>
-          <Link href={"/rep/" + item.id}>
-            <View>
-              <Text style={gs.repText}>{item.summary}</Text>
-              <Text style={gs.repSecondaryText}>
-                Rep {reps.length - index} {item.created_at}{" "}
-              </Text>
-            </View>
-          </Link>
-        </View>
+        <RepCard rep={item} rep_number={reps.length - index} />
       )}
     />
   );
