@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
+import { Link } from "expo-router";
 
 import { useQuery } from "@tanstack/react-query";
 import { getSupabasePrograms } from "@/supabase/supabase-queries";
@@ -29,9 +30,9 @@ export default function Programs() {
         renderItem={({ item }) => (
           <View style={styles.card}>
             <View style={{ marginLeft: 10, flex: 1 }}>
-              <Text style={{ marginBottom: 5 }}>{item.title}</Text>
-              <View style={styles.horizontalRule} />
-              <Text style={{ marginTop: 5 }}>{item.description}</Text>
+              <Link href={"/program/" + item.id}>
+                <Text style={{ marginBottom: 5 }}>{item.title}</Text>
+              </Link>
             </View>
           </View>
         )}
