@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  Modal,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, Pressable, Modal } from "react-native";
+
 import { supabase } from "@/supabase/supabase-client";
 import { Tables } from "@/supabase/database.types";
 import { useQueryClient } from "@tanstack/react-query";
+import { gs } from "@/global-styles";
 
 interface Props {
   add_to_practice: Tables<"Practices">;
@@ -23,7 +18,7 @@ export function AddRecipeToPractice({ add_to_practice }: Props) {
   const queryClient = useQueryClient();
 
   async function createNewNugget() {
-    if (!newTitle || !newText) return;
+    if (!newTitle) return;
 
     const { error } = await supabase.from("Nuggets").insert({
       title: newTitle,
@@ -54,10 +49,9 @@ export function AddRecipeToPractice({ add_to_practice }: Props) {
       >
         <View style={{ marginTop: 24, marginRight: 12, marginLeft: 12 }}>
           <View style={{ marginTop: 36, marginRight: 12, marginLeft: 12 }}>
-            <Text style={styles.text}>New recipe title</Text>
-            <Text style={styles.secondaryText}>
-              I suggest adding the main idea or source as well as the next
-              action for how to use it.
+            <Text style={gs.h2}>New Recipe Title</Text>
+            <Text style={gs.secondaryText}>
+              What&apos;s the main idea or action?
             </Text>
             <TextInput
               style={{
@@ -69,9 +63,9 @@ export function AddRecipeToPractice({ add_to_practice }: Props) {
               onChangeText={(text) => setNewTitle(text)}
               value={newTitle}
             />
-            <Text style={styles.text}>New recipe body</Text>
-            <Text style={styles.secondaryText}>
-              Any notes about the source, idea or plan.
+            <Text style={gs.h2}>New Recipe Description</Text>
+            <Text style={gs.secondaryText}>
+              Describe the ACTION, desired result and any other helpful details.
             </Text>
             <TextInput
               style={{
@@ -102,7 +96,7 @@ export function AddRecipeToPractice({ add_to_practice }: Props) {
               >
                 <Text>Cancel</Text>
               </Pressable>
-              <Pressable onPress={createNewNugget} style={styles.button}>
+              <Pressable onPress={createNewNugget} style={gs.button}>
                 <Text>Save</Text>
               </Pressable>
             </View>
@@ -111,7 +105,7 @@ export function AddRecipeToPractice({ add_to_practice }: Props) {
       </Modal>
       <View style={{ margin: 12, width: 150 }}>
         <Pressable
-          style={styles.button}
+          style={gs.button}
           onPress={() => {
             setModalVisible(true);
           }}
@@ -122,28 +116,3 @@ export function AddRecipeToPractice({ add_to_practice }: Props) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "lightgreen",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    height: 50,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  secondaryText: {
-    fontSize: 14,
-    color: "#888",
-    marginTop: 10,
-  },
-});
