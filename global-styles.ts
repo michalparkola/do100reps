@@ -39,7 +39,7 @@ export const gs = StyleSheet.create({
   },
 
   h2: {
-    marginVertical: 12,
+    marginVertical: 6,
     fontSize: 16,
     fontWeight: "bold",
   },
@@ -56,7 +56,6 @@ export const gs = StyleSheet.create({
   secondaryText: {
     fontSize: 14,
     color: "#888",
-    marginTop: 10,
   },
 
   noteContainer: {
@@ -76,6 +75,17 @@ export const gs = StyleSheet.create({
 
   itemContainer: {
     backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+  },
+
+  activityContainer: {
+    backgroundColor: "#c7f2ff",
     borderRadius: 10,
     padding: 12,
     marginBottom: 12,

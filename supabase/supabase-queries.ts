@@ -167,7 +167,8 @@ export async function getSupabaseProgramById(programId: string) {
     const { data: activities, error: activitiesError } = await supabase
       .from("Activities")
       .select()
-      .eq("program_id", programId);
+      .eq("program_id", programId)
+      .order("id");
     if (activitiesError) {
       throw new Error(activitiesError.message);
     } else {
