@@ -1,10 +1,14 @@
 import React from "react";
 import { View, ScrollView, Text, FlatList } from "react-native";
+
 import { useProgram } from "@/hooks/useProgram";
 import { useReps } from "@/hooks/useReps";
-import { gs } from "@/global-styles";
-import RepCard from "../practice/RepCard";
+
 import { Tables } from "@/supabase/database.types";
+import { gs } from "@/global-styles";
+
+import RepCard from "../practice/RepCard";
+
 interface ProgramProps {
   programId: string;
 }
