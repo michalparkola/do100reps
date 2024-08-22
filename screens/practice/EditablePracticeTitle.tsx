@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Text, TextInput, Pressable } from "react-native";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  getSupabasePracticeById,
-  savePracticeTitle,
-} from "@/supabase/supabase-queries";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { savePracticeTitle } from "@/supabase/supabase-queries";
+import { usePractice } from "@/hooks/usePractice";
 import { gs } from "@/global-styles";
 
 interface Props {
@@ -24,10 +22,7 @@ export default function EditablePracticeTitle({
     isPending: isPendingPractice,
     error: errorPractice,
     data: practice,
-  } = useQuery({
-    queryKey: ["practice", practice_id],
-    queryFn: () => getSupabasePracticeById(practice_id),
-  });
+  } = usePractice(practice_id);
 
   // mutation: practice title
   const queryClient = useQueryClient();
@@ -35,6 +30,7 @@ export default function EditablePracticeTitle({
     mutationFn: (newTitle: string) => savePracticeTitle(practice_id, newTitle),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["practice", practice_id] });
+      queryClient.invalidateQueries({ queryKey: ["practices"] });
     },
   });
 
@@ -56,6 +52,13 @@ export default function EditablePracticeTitle({
       onSubmitEditing={() => {
         setEditing(false);
         practiceTitleMutation.mutate(editedTitle);
+      }}
+      multiline={true}
+      onKeyPress={({ nativeEvent }) => {
+        if (nativeEvent.key === "Enter") {
+          setEditing(false);
+          practiceTitleMutation.mutate(editedTitle);
+        }
       }}
       autoFocus={true}
     />
