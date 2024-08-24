@@ -33,7 +33,7 @@ export default function NextRep({ practice_id, next_rep_cnt }: Props) {
 
     await supabase
       .from("Reps")
-      .insert({ summary: nextRepText, practice_id: practice_id });
+      .insert({ summary: nextRepText, practice_id: Number(practice_id) });
 
     await supabase
       .from("Practices")
