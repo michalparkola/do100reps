@@ -6,8 +6,8 @@ import { useReps } from "@/hooks/useReps";
 
 import EditablePracticeTitle from "./EditablePracticeTitle";
 import PracticeProgress from "./PracticeProgress";
-import NextRep from "./NextRep";
-import RepCard from "./RepCard";
+import NextRep from "../reps/NextRep";
+import RepCard from "../reps/RepCard";
 import RecipeListForPractice from "@/screens/recipes/RecipeListForPractice";
 import { AddRecipeToPractice } from "../recipes/AddRecipe";
 

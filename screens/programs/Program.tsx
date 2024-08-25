@@ -7,7 +7,8 @@ import { useReps } from "@/hooks/useReps";
 import { Tables } from "@/supabase/database.types";
 import { gs } from "@/global-styles";
 
-import RepCard from "../practice/RepCard";
+import RepCard from "../reps/RepCard";
+import { ConnectRepToActionModal } from "../reps/ConnectRepToActionModal";
 
 interface ProgramProps {
   programId: string;
