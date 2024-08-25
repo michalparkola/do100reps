@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Text, Keyboard } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { supabase } from "@/supabase/supabase-client";
-import Rep from "@/screens/practice/Rep";
+import Rep from "@/screens/reps/Rep";
 
 interface Rep {
   id: string;
