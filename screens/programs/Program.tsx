@@ -8,7 +8,7 @@ import { Tables } from "@/supabase/database.types";
 import { gs } from "@/global-styles";
 
 import RepCard from "../reps/RepCard";
-import { ConnectRepToActionModal } from "../reps/ConnectRepToActionModal";
+import { ConnectRepToActivityModal } from "./ConnectRepToActivityModal";
 
 interface ProgramProps {
   programId: string;
@@ -62,9 +62,18 @@ export default function Program({ programId }: ProgramProps) {
                   />
                 )}
                 ListFooterComponent={
-                  <Text style={{ color: "#888", marginBottom: 12 }}>
-                    TODO: connect rep | add new rep
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                      marginBottom: 20,
+                    }}
+                  >
+                    <ConnectRepToActivityModal
+                      practice_id={String(program?.practice ?? "")}
+                      activity_id={item.id}
+                    />
+                  </View>
                 }
               />
             </>

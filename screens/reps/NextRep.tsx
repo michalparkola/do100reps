@@ -6,12 +6,17 @@ import { useAddRep } from "@/hooks/useAddRep";
 interface Props {
   practice_id: string;
   next_rep_cnt: number;
+  activity_id?: number;
 }
 
-export default function NextRep({ practice_id, next_rep_cnt }: Props) {
+export default function NextRep({
+  practice_id,
+  next_rep_cnt,
+  activity_id,
+}: Props) {
   const [nextRepText, setNextRepText] = useState("");
 
-  const nextRepMutation = useAddRep(practice_id, next_rep_cnt);
+  const nextRepMutation = useAddRep(practice_id, next_rep_cnt, activity_id);
 
   async function handleAddNextRep() {
     if (nextRepText.length == 0) {

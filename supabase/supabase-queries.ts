@@ -206,3 +206,30 @@ export async function saveNextRep(
 
   return new_rep[0];
 }
+
+export async function addRepToActivity(activity_id: number, rep_id: number) {
+  const { data: activity, error: activityError } = await supabase
+    .from("Activities")
+    .select()
+    .eq("id", activity_id);
+
+  if (activityError) {
+    throw new Error(activityError.message);
+  }
+
+  let new_related_reps = [];
+  if (activity && activity.length > 0 && activity[0].related_reps) {
+    new_related_reps = [...activity[0].related_reps, rep_id];
+  } else new_related_reps = [rep_id];
+
+  const { error: appendRepError } = await supabase
+    .from("Activities")
+    .update({ related_reps: new_related_reps })
+    .eq("id", activity_id);
+
+  if (appendRepError) {
+    throw new Error(appendRepError.message);
+  }
+
+  console.log("Added rep ", rep_id, " to activity: ", activity);
+}
