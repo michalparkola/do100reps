@@ -6,6 +6,7 @@ export const gs = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 12,
   },
+
   repContainer: {
     backgroundColor: "#FFF",
     borderRadius: 10,
@@ -16,14 +17,17 @@ export const gs = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 3 },
   },
+
   repText: {
     fontSize: 16,
   },
+
   repSecondaryText: {
     fontSize: 14,
     color: "#888",
     marginTop: 10,
   },
+
   button: {
     backgroundColor: "lightgreen",
     paddingVertical: 10,
