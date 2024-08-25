@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Text, TextInput, StyleSheet, Keyboard, Pressable } from "react-native";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/supabase/supabase-client";
+import { useAddRep } from "@/hooks/useAddRep";
 
 interface Props {
   practice_id: string;
@@ -11,34 +10,16 @@ interface Props {
 export default function NextRep({ practice_id, next_rep_cnt }: Props) {
   const [nextRepText, setNextRepText] = useState("");
 
-  // mutation: practice title
-  const queryClient = useQueryClient();
-  const nextRepMutation = useMutation({
-    mutationFn: () => saveNextRep(practice_id, nextRepText, next_rep_cnt),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reps", practice_id] });
-    },
-  });
+  const nextRepMutation = useAddRep(practice_id, next_rep_cnt);
 
-  async function saveNextRep(
-    practice_id: string,
-    next_rep_text: string,
-    next_rep_cnt: number
-  ) {
+  async function handleAddNextRep() {
     if (nextRepText.length == 0) {
       console.log("Not saving an empty rep");
       return;
     }
-    console.log("Saving", next_rep_text, practice_id);
+    console.log("Saving", nextRepText, practice_id);
 
-    await supabase
-      .from("Reps")
-      .insert({ summary: nextRepText, practice_id: Number(practice_id) });
-
-    await supabase
-      .from("Practices")
-      .update({ do100reps_count: next_rep_cnt })
-      .eq("id", practice_id);
+    nextRepMutation.mutate(nextRepText);
 
     setNextRepText("");
     Keyboard.dismiss();
@@ -56,7 +37,7 @@ export default function NextRep({ practice_id, next_rep_cnt }: Props) {
         value={nextRepText}
       />
 
-      <Pressable style={styles.button} onPress={() => nextRepMutation.mutate()}>
+      <Pressable style={styles.button} onPress={handleAddNextRep}>
         <Text style={styles.text}>Record the next rep</Text>
       </Pressable>
     </>

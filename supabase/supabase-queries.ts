@@ -176,3 +176,33 @@ export async function getSupabaseProgramById(programId: string) {
     }
   }
 }
+
+export async function saveNextRep(
+  practice_id: string,
+  next_rep_text: string,
+  next_rep_cnt: number,
+) {
+  if (next_rep_text.length == 0) {
+    throw new Error("Error: tried to save empty rep");
+  }
+
+  const { data: new_rep, error: errorAddRep } = await supabase
+    .from("Reps")
+    .insert({ summary: next_rep_text, practice_id: Number(practice_id) })
+    .select();
+
+  if (errorAddRep) {
+    throw new Error(errorAddRep.message);
+  }
+
+  const { error: errorUpdatePractice } = await supabase
+    .from("Practices")
+    .update({ do100reps_count: next_rep_cnt })
+    .eq("id", practice_id);
+
+  if (errorUpdatePractice) {
+    throw new Error(errorUpdatePractice.message);
+  }
+
+  return new_rep;
+}
