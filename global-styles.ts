@@ -38,6 +38,19 @@ export const gs = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
   },
 
+  smallButton: {
+    backgroundColor: "lightgreen",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+    padding: 10,
+    alignSelf: "flex-start",
+  },
+
   h2: {
     marginVertical: 6,
     fontSize: 16,
