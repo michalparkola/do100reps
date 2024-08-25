@@ -232,4 +232,5 @@ export async function addRepToActivity(activity_id: number, rep_id: number) {
   }
 
   console.log("Added rep ", rep_id, " to activity: ", activity);
+  return activity;
 }

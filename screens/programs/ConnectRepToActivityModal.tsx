@@ -11,7 +11,7 @@ import {
 import { useReps } from "@/hooks/useReps";
 import { gs } from "@/global-styles";
 import NextRep from "../reps/NextRep";
-import RepCard from "../reps/RepCard";
+import { useRelateRepToActivity } from "@/hooks/useRelateRepToActivity";
 
 interface Props {
   practice_id: string;
@@ -28,12 +28,15 @@ export function ConnectRepToActivityModal({ practice_id, activity_id }: Props) {
     data: reps,
   } = useReps(practice_id);
 
+  const relateRepMutation = useRelateRepToActivity(activity_id);
+
   if (isPendingReps) return <Text>Loading reps...</Text>;
   if (errorReps) return <Text>Error loading reps...</Text>;
 
-  //async function connectRepToAction() {
-  //  setModalVisible(false);
-  //}
+  function handleSelectRep(rep_id: number) {
+    relateRepMutation.mutate(rep_id);
+    setModalVisible(false);
+  }
 
   return (
     <>
@@ -68,8 +71,19 @@ export function ConnectRepToActivityModal({ practice_id, activity_id }: Props) {
             <FlatList
               style={styles.flatList}
               data={reps}
-              renderItem={({ item, index }) => (
-                <RepCard rep={item} rep_number={reps.length - index} />
+              renderItem={({ item: rep, index: rep_number }) => (
+                <View style={gs.repContainer}>
+                  <Pressable
+                    onPress={() => {
+                      handleSelectRep(rep.id);
+                    }}
+                  >
+                    <Text style={gs.repText}>{rep.summary}</Text>
+                    <Text style={gs.repSecondaryText}>
+                      Rep {rep_number} {rep.created_at}{" "}
+                    </Text>
+                  </Pressable>
+                </View>
               )}
             />
           </View>
