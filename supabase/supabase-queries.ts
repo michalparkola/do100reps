@@ -181,7 +181,7 @@ export async function saveNextRep(
   practice_id: string,
   next_rep_text: string,
   next_rep_cnt: number,
-) {
+): Promise<Tables<"Reps">> {
   if (next_rep_text.length == 0) {
     throw new Error("Error: tried to save empty rep");
   }
@@ -204,5 +204,5 @@ export async function saveNextRep(
     throw new Error(errorUpdatePractice.message);
   }
 
-  return new_rep;
+  return new_rep[0];
 }
