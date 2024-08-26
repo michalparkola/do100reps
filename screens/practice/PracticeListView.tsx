@@ -1,14 +1,11 @@
 import React from "react";
 import { View, Text, SectionList, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import {
-  getSupabaseUserId,
-  getSupabasePractices,
-} from "@/supabase/supabase-queries";
+
 import { Tables } from "@/supabase/database.types";
 import PracticeGrid from "@/screens/practice/PracticeGrid";
 import { AddPractice } from "./AddPractice";
-import { useQuery } from "@tanstack/react-query";
+import { usePractices } from "@/hooks/usePractices";
 
 function groupPracticesByCategory(practices: Tables<"Practices">[]) {
   return Object.entries(
@@ -21,34 +18,14 @@ function groupPracticesByCategory(practices: Tables<"Practices">[]) {
 }
 
 export default function PracticeList() {
-  // Query: getSupabaseUserId
-  const {
-    isPending: isPendingUser,
-    error: errorUser,
-    data: userid,
-  } = useQuery({
-    queryKey: ["userid"],
-    queryFn: getSupabaseUserId,
-  });
-
-  // Query: getSupabasePractices
   const {
     isPending: isPendingPractices,
     error: errorPractices,
     data: practices,
-  } = useQuery({
-    queryKey: ["practices", userid],
-    queryFn: () => {
-      if (userid) {
-        const data = getSupabasePractices(userid);
-        return data;
-      }
-    },
-    enabled: !!userid,
-  });
+  } = usePractices();
 
-  if (isPendingUser || isPendingPractices) return <Text>Loading...</Text>;
-  if (errorUser || errorPractices) return <Text>Error!</Text>;
+  if (isPendingPractices) return <Text>Loading...</Text>;
+  if (errorPractices) return <Text>Error!</Text>;
 
   const categories = groupPracticesByCategory(practices ?? []);
 
