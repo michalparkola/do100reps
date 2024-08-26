@@ -1,19 +1,44 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, SectionList } from "react-native";
 import { Link } from "expo-router";
+import { Tables } from "@/supabase/database.types";
 
 import { usePrograms } from "@/hooks/usePrograms";
+import { usePractices } from "@/hooks/usePractices";
+
+function groupProgramsByPractice(programs: Tables<"Programs">[]) {
+  return Object.entries(
+    programs.reduce((practices, program) => {
+      const category = program.practice ?? "Uncategorized";
+      (practices[category] = practices[category] || []).push(program);
+      return practices;
+    }, {} as Record<string, Tables<"Programs">[]>)
+  ).map(([title, data]) => ({ title, data }));
+}
 
 export default function Programs() {
   const { isPending: isPending, error: error, data: programs } = usePrograms();
+  const {
+    isPending: isPendingPractices,
+    error: errorPractices,
+    data: practices,
+  } = usePractices();
 
-  if (isPending) return <Text>Loading...</Text>;
-  if (error) return <Text>Error!</Text>;
+  if (isPending || isPendingPractices) return <Text>Loading...</Text>;
+  if (error || errorPractices) return <Text>Error!</Text>;
+
+  console.log(practices);
+
+  const groupedPrograms = groupProgramsByPractice(programs ?? []);
+
+  function findPracticeById(id: number) {
+    return practices?.find((practice) => practice.id === id);
+  }
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        data={programs}
+      <SectionList
+        sections={groupedPrograms}
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
         keyExtractor={(item) => item.id?.toString() ?? "None"}
         renderItem={({ item }) => (
@@ -24,6 +49,11 @@ export default function Programs() {
               </Link>
             </View>
           </View>
+        )}
+        renderSectionHeader={({ section: { title: id } }) => (
+          <Text style={{ margin: 12, fontWeight: "bold" }}>
+            {findPracticeById(Number(id))?.name || ""}
+          </Text>
         )}
       />
     </View>
