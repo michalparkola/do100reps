@@ -2,21 +2,10 @@ import React from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { Link } from "expo-router";
 
-import { useQuery } from "@tanstack/react-query";
-import { getSupabasePrograms } from "@/supabase/supabase-queries";
+import { usePrograms } from "@/hooks/usePrograms";
 
 export default function Programs() {
-  // Query: stories
-  const {
-    isPending: isPending,
-    error: error,
-    data: stories,
-  } = useQuery({
-    queryKey: ["programs"],
-    queryFn: () => {
-      return getSupabasePrograms();
-    },
-  });
+  const { isPending: isPending, error: error, data: programs } = usePrograms();
 
   if (isPending) return <Text>Loading...</Text>;
   if (error) return <Text>Error!</Text>;
@@ -24,7 +13,7 @@ export default function Programs() {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={stories}
+        data={programs}
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
         keyExtractor={(item) => item.id?.toString() ?? "None"}
         renderItem={({ item }) => (

@@ -142,16 +142,30 @@ export async function updateNugget(
   }
 }
 
-export async function getSupabasePrograms() {
-  const { data, error } = await supabase
-    .from("Programs")
-    .select()
-    .order("created_at", { ascending: false });
+export async function getSupabasePrograms(practice_id?: number) {
+  if (practice_id) {
+    const { data, error } = await supabase
+      .from("Programs")
+      .select()
+      .eq("practice", practice_id)
+      .order("created_at", { ascending: false });
 
-  if (error) {
-    throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    } else {
+      return data;
+    }
   } else {
-    return data;
+    const { data, error } = await supabase
+      .from("Programs")
+      .select()
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw new Error(error.message);
+    } else {
+      return data;
+    }
   }
 }
 
