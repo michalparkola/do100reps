@@ -10,6 +10,7 @@ import NextRep from "../reps/NextRep";
 import RepCard from "../reps/RepCard";
 import RecipeListForPractice from "@/screens/recipes/RecipeListForPractice";
 import { AddRecipeToPractice } from "../recipes/AddRecipe";
+import ProgramsListForPractice from "../programs/ProgramsListForPractice";
 
 interface Props {
   practiceId: string;
@@ -42,6 +43,7 @@ export default function PracticeView({ practiceId }: Props) {
             practice_title={practice.do100reps_title ?? ""}
           />
           <PracticeProgress completed_reps_count={reps.length} />
+          <ProgramsListForPractice practice_id={practice.id} />
           <RecipeListForPractice practice_title={practice.name} />
           <AddRecipeToPractice add_to_practice={practice} />
           <NextRep practice_id={practiceId} next_rep_cnt={reps.length + 1} />

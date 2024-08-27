@@ -41,7 +41,7 @@ export default function RecipeListForPractice({ practice_title }: Props) {
   return (
     <>
       <Text style={{ fontSize: 16, marginTop: 12 }}>
-        Apply ideas from recipes to your next rep:
+        Apply ideas from RECIPES to your next rep:
       </Text>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 12 }}>
         <Text>Also show shelved recipes:</Text>
