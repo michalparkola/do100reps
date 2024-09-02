@@ -1,13 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import {
-  Text,
-  TextInput,
-  Pressable,
-  FlatList,
-  View,
-  StyleSheet,
-} from "react-native";
+import { Text, TextInput, Pressable, FlatList, View } from "react-native";
+import { gs } from "@/global-styles";
 import { Calendar, DateData } from "react-native-calendars";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -16,15 +10,10 @@ import {
   createNote,
 } from "@/supabase/supabase-queries";
 
-interface Rep {
-  id: string;
-  user_id: string;
-  summary: string;
-  created_at: string;
-}
+import { Tables } from "@/supabase/database.types";
 
 interface RepViewProps {
-  rep: Rep;
+  rep: Tables<"Reps">;
   handleRepChange: (newRepSummary: string, newRepDate: string) => void;
 }
 
@@ -54,7 +43,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
     data: notes,
   } = useQuery({
     queryKey: ["notes", rep.id],
-    queryFn: () => getNotesByRepId(rep.id),
+    queryFn: () => getNotesByRepId(String(rep.id)),
   });
 
   const updateNoteMutation = useMutation({
@@ -88,7 +77,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
         </>
       ) : (
         <>
-          <Text style={[styles.text, { margin: 12 }]}>Created at</Text>
+          <Text style={[gs.h2, { margin: 12 }]}>Created at</Text>
           <Text
             style={{ marginHorizontal: 12, marginBottom: 12 }}
             onPress={() => setIsEditingDate(true)}
@@ -98,7 +87,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
         </>
       )}
 
-      <Text style={[styles.text, { marginHorizontal: 12, marginTop: 12 }]}>
+      <Text style={[gs.h2, { marginHorizontal: 12, marginTop: 12 }]}>
         Rep summary
       </Text>
       {isEditingRepSummary ? (
@@ -127,7 +116,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
               Cancel
             </Text>
             <Pressable
-              style={[styles.button, { margin: 12, height: 24 }]}
+              style={[gs.button, { margin: 12, height: 24 }]}
               onPress={() => {
                 setIsEditingRepSummary(false);
                 handleRepChange(repSummary, date);
@@ -145,7 +134,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
         </>
       )}
 
-      <Text style={[styles.text, { marginHorizontal: 12, marginTop: 12 }]}>
+      <Text style={[gs.h2, { marginHorizontal: 12, marginTop: 12 }]}>
         Notes
       </Text>
       {isPendingNotes || errorNotes || notes.length == 0 ? (
@@ -156,7 +145,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
             style={{ margin: 12 }}
             data={notes}
             renderItem={({ item }) => (
-              <View style={styles.noteContainer}>
+              <View style={gs.noteContainer}>
                 {editingNoteId === item.id ? (
                   <TextInput
                     style={{ margin: 12, padding: 6 }}
@@ -194,7 +183,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
       )}
       <Text
         style={[
-          styles.text,
+          gs.h2,
           {
             marginTop: 12,
             marginHorizontal: 12,
@@ -220,10 +209,13 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
       />
       <View style={{ marginRight: 12, marginLeft: 12, marginTop: 6 }}>
         <Pressable
-          style={styles.button}
+          style={gs.button}
           onPress={() => {
             if (newNoteText.trim()) {
-              createNoteMutation.mutate({ rep_id: rep.id, text: newNoteText });
+              createNoteMutation.mutate({
+                rep_id: String(rep.id),
+                text: newNoteText,
+              });
               setNewNoteText(""); // Clear the input after adding
             }
           }}
@@ -234,38 +226,3 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "lightgreen",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    height: 50,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  secondaryText: {
-    fontSize: 14,
-    color: "#888",
-    marginTop: 10,
-  },
-  noteContainer: {
-    backgroundColor: "lightyellow",
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
-});
