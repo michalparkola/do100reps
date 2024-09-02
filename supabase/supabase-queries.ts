@@ -61,7 +61,7 @@ export async function getSupabaseRepsByPracticeId(practiceId: string) {
   }
 }
 
-export async function getNotesByRepId(rep_id: string) {
+export async function getNotesByRepId(rep_id: number) {
   const { data, error } = await supabase
     .from("RepNotes")
     .select()
