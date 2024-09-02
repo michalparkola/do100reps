@@ -8,9 +8,9 @@ import { Tables } from "@/supabase/database.types";
 import { updateNote } from "@/supabase/supabase-queries";
 
 import { useNotes } from "./useNotes";
-import { useAddNoteToRep } from "./useAddNoteToRep";
 
 import { gs } from "@/global-styles";
+import { AddRepNote } from "./AddNote";
 
 interface RepViewProps {
   rep: Tables<"Reps">;
@@ -26,7 +26,6 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
 
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [editedNoteText, setEditedNoteText] = useState<string>("");
-  const [newNoteText, setNewNoteText] = useState<string>("");
 
   const queryClient = useQueryClient();
 
@@ -48,8 +47,6 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["notes", rep.id] }),
   });
-
-  const createNoteMutation = useAddNoteToRep(rep.id);
 
   if (isPendingNotes) return <Text>Loading notes...</Text>;
   if (errorNotes) return <Text>Error loading notes: {errorNotes.message}</Text>;
@@ -127,15 +124,13 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
         </>
       )}
 
-      <Text style={[gs.h2, { marginHorizontal: 12, marginTop: 12 }]}>
-        Notes
-      </Text>
+      <Text style={[gs.h2, { margin: 12 }]}>Notes</Text>
       {isPendingNotes || errorNotes || notes.length == 0 ? (
         <Text style={{ margin: 12 }}>No notes (yet)</Text>
       ) : (
         <View style={{ flexGrow: 0 }}>
           <FlatList
-            style={{ margin: 12 }}
+            style={{ marginHorizontal: 12 }}
             data={notes}
             renderItem={({ item }) => (
               <View style={gs.noteContainer}>
@@ -168,53 +163,11 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
                 )}
               </View>
             )}
-            ItemSeparatorComponent={() => (
-              <View style={{ height: 1, backgroundColor: "#ccc" }} />
-            )}
           />
         </View>
       )}
-      <Text
-        style={[
-          gs.h2,
-          {
-            marginTop: 12,
-            marginHorizontal: 12,
-            marginBottom: 6,
-          },
-        ]}
-      >
-        Add note
-      </Text>
-      <TextInput
-        value={newNoteText}
-        onChangeText={setNewNoteText}
-        style={{
-          height: 150,
-          marginLeft: 12,
-          marginRight: 12,
-          borderWidth: 1,
-          borderColor: "lightgray",
-          backgroundColor: "lightyellow",
-          padding: 10,
-        }}
-        multiline
-      />
-      <View style={{ marginRight: 12, marginLeft: 12, marginTop: 6 }}>
-        <Pressable
-          style={gs.button}
-          onPress={() => {
-            if (newNoteText.trim()) {
-              createNoteMutation.mutate({
-                text: newNoteText,
-              });
-              setNewNoteText(""); // Clear the input after adding
-            }
-          }}
-        >
-          <Text>Save note</Text>
-        </Pressable>
-      </View>
+
+      <AddRepNote rep_id={rep.id} />
     </>
   );
 }

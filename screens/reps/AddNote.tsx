@@ -1,18 +1,29 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, Modal } from "react-native";
 
+import { useAddNoteToRep } from "./useAddNoteToRep";
+
 import { gs } from "@/global-styles";
 
-interface Props {
-  rep_id: number;
-}
-
-export function AddRepNote({ rep_id }: Props) {
+export function AddRepNote({ rep_id }: { rep_id: number }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [newText, setNewText] = useState("");
 
+  const createNoteMutation = useAddNoteToRep(rep_id);
+
   async function handleSave() {
-    return;
+    if (!newText) return;
+
+    createNoteMutation.mutate({
+      text: newText,
+    });
+
+    if (!createNoteMutation.error) {
+      setNewText("");
+      setModalVisible(false);
+    } else {
+      console.error(createNoteMutation.error);
+    }
   }
 
   return (
