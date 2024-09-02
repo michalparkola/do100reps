@@ -58,7 +58,7 @@ export default function RecipeListForPractice({ practice_title }: Props) {
         <FlatList
           data={nuggetsToShow}
           renderItem={({ item }: { item: Tables<"Nuggets"> }) => (
-            <View style={gs.itemContainer}>
+            <View style={item.is_todo ? gs.itemContainer : gs.shelvedContainer}>
               <Link href={"/recipe/" + item.id}>
                 <View>
                   <Text style={gs.text}>{item.title}</Text>

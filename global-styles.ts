@@ -101,6 +101,17 @@ export const gs = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
   },
 
+  shelvedContainer: {
+    backgroundColor: "#e6e6e6",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+  },
+
   activityContainer: {
     backgroundColor: "#c7f2ff",
     borderRadius: 10,
