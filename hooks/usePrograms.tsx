@@ -6,7 +6,7 @@ export function usePrograms(
   practice_id?: number
 ): UseQueryResult<Tables<"Programs">[]> {
   return useQuery({
-    queryKey: ["programs"],
+    queryKey: ["programs", practice_id],
     queryFn: () => {
       return getSupabasePrograms(practice_id);
     },
