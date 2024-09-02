@@ -233,7 +233,15 @@ export async function addRepToActivity(activity_id: number, rep_id: number) {
 
   let new_related_reps = [];
   if (activity && activity.length > 0 && activity[0].related_reps) {
-    new_related_reps = [...activity[0].related_reps, rep_id];
+    if (activity[0].related_reps.includes(rep_id)) {
+      console.log(
+        "Skipped rep ",
+        rep_id,
+        " as it already exists in activity ",
+        activity,
+      );
+      return activity;
+    } else new_related_reps = [...activity[0].related_reps, rep_id];
   } else new_related_reps = [rep_id];
 
   const { error: appendRepError } = await supabase
