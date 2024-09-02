@@ -3,12 +3,9 @@ import { useState } from "react";
 import { Text, TextInput, Pressable, FlatList, View } from "react-native";
 import { gs } from "@/global-styles";
 import { Calendar, DateData } from "react-native-calendars";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  getNotesByRepId,
-  updateNote,
-  createNote,
-} from "@/supabase/supabase-queries";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateNote, createNote } from "@/supabase/supabase-queries";
+import { useNotes } from "./useNotes";
 
 import { Tables } from "@/supabase/database.types";
 
@@ -36,15 +33,11 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
     handleRepChange(repSummary, dateString);
   }
 
-  // query: notes
   const {
     isPending: isPendingNotes,
     error: errorNotes,
     data: notes,
-  } = useQuery({
-    queryKey: ["notes", rep.id],
-    queryFn: () => getNotesByRepId(String(rep.id)),
-  });
+  } = useNotes(rep.id);
 
   const updateNoteMutation = useMutation({
     mutationFn: ({ note_id, newText }: { note_id: string; newText: string }) =>
@@ -60,6 +53,9 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
       queryClient.invalidateQueries({ queryKey: ["notes", rep.id] });
     },
   });
+
+  if (isPendingNotes) return <Text>Loading notes...</Text>;
+  if (errorNotes) return <Text>Error loading notes: {errorNotes.message}</Text>;
 
   return (
     <>
