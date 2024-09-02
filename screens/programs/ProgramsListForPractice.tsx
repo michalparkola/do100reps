@@ -27,6 +27,8 @@ export default function ProgramsListForPractice({ practice_id }: Props) {
     ? programs
     : programs.filter((program) => !program.is_shelved);
 
+  if (programsToShow.length === 0) return <></>;
+
   return (
     <>
       <Text style={{ fontSize: 16, marginTop: 12 }}>
