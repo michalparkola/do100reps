@@ -88,10 +88,10 @@ export async function updateNote(note_id: string, text: string) {
   }
 }
 
-export async function createNote(rep_id: string, text: string) {
+export async function createNote(rep_id: number, text: string) {
   const { data, error } = await supabase
     .from("RepNotes")
-    .insert({ rep_id: Number(rep_id), text: text });
+    .insert({ rep_id: rep_id, text: text });
 
   if (error) {
     throw new Error(error.message);

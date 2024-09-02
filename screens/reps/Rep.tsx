@@ -1,13 +1,16 @@
 import React from "react";
 import { useState } from "react";
 import { Text, TextInput, Pressable, FlatList, View } from "react-native";
-import { gs } from "@/global-styles";
+
 import { Calendar, DateData } from "react-native-calendars";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateNote, createNote } from "@/supabase/supabase-queries";
-import { useNotes } from "./useNotes";
-
 import { Tables } from "@/supabase/database.types";
+import { updateNote } from "@/supabase/supabase-queries";
+
+import { useNotes } from "./useNotes";
+import { useAddNoteToRep } from "./useAddNoteToRep";
+
+import { gs } from "@/global-styles";
 
 interface RepViewProps {
   rep: Tables<"Reps">;
@@ -46,13 +49,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
       queryClient.invalidateQueries({ queryKey: ["notes", rep.id] }),
   });
 
-  const createNoteMutation = useMutation({
-    mutationFn: ({ rep_id, text }: { rep_id: string; text: string }) =>
-      createNote(rep_id, text),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes", rep.id] });
-    },
-  });
+  const createNoteMutation = useAddNoteToRep(rep.id);
 
   if (isPendingNotes) return <Text>Loading notes...</Text>;
   if (errorNotes) return <Text>Error loading notes: {errorNotes.message}</Text>;
@@ -209,7 +206,6 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
           onPress={() => {
             if (newNoteText.trim()) {
               createNoteMutation.mutate({
-                rep_id: String(rep.id),
                 text: newNoteText,
               });
               setNewNoteText(""); // Clear the input after adding
