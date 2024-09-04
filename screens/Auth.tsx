@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { supabase } from "../supabase/supabase-client";
 import { Button, Input } from "react-native-elements";
 
@@ -7,20 +7,36 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   async function signInWithEmail() {
+    if (!email || !password) {
+      setMessage("Email and password cannot be empty.");
+      return;
+    }
+
     setLoading(true);
+    setMessage("");
+
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) setMessage(error.message);
+
     setLoading(false);
   }
 
   async function signUpWithEmail() {
+    if (!email || !password) {
+      setMessage("Email and password cannot be empty.");
+      return;
+    }
+
     setLoading(true);
+    setMessage("");
+
     const {
       data: { session },
       error,
@@ -29,18 +45,19 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert("Please check your inbox for email verification!");
+    if (error) setMessage(error.message);
+
+    if (!session) setMessage("Please check your inbox for email verification!");
+
     setLoading(false);
   }
 
   return (
     <View style={styles.container}>
+      {message ? <Text style={styles.errorMessage}>{message}</Text> : null}
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
-          leftIcon={{ type: "font-awesome", name: "envelope" }}
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
@@ -50,7 +67,6 @@ export default function Auth() {
       <View style={styles.verticallySpaced}>
         <Input
           label="Password"
-          leftIcon={{ type: "font-awesome", name: "lock" }}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
@@ -59,18 +75,10 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title="Sign in"
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        />
+        <Button title="Sign in" disabled={loading} onPress={signInWithEmail} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button
-          title="Sign up"
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        />
+        <Button title="Sign up" disabled={loading} onPress={signUpWithEmail} />
       </View>
     </View>
   );
@@ -88,5 +96,10 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  errorMessage: {
+    color: "red",
+    textAlign: "center",
+    marginTop: 10,
   },
 });
