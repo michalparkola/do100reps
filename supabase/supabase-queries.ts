@@ -256,3 +256,16 @@ export async function addRepToActivity(activity_id: number, rep_id: number) {
   console.log("Added rep ", rep_id, " to activity: ", activity);
   return activity;
 }
+
+export async function addProgramToPractice(
+  practice_id: number,
+  program_title: string,
+) {
+  const { error: addProgramError } = await supabase
+    .from("Programs")
+    .insert({ title: program_title, practice: practice_id });
+
+  if (addProgramError) {
+    throw new Error(addProgramError.message);
+  }
+}

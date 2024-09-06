@@ -5,6 +5,7 @@ import { Tables } from "@/supabase/database.types";
 
 import { usePrograms } from "@/hooks/usePrograms";
 import { usePractices } from "@/hooks/usePractices";
+import { AddProgramToPractice } from "./AddProgram";
 
 function groupProgramsByPractice(programs: Tables<"Programs">[]) {
   return Object.entries(
@@ -51,9 +52,14 @@ export default function Programs() {
           </View>
         )}
         renderSectionHeader={({ section: { title: id } }) => (
-          <Text style={{ margin: 12, fontWeight: "bold" }}>
-            {findPracticeById(Number(id))?.name || ""}
-          </Text>
+          <>
+            <Text style={{ margin: 12, fontWeight: "bold" }}>
+              {findPracticeById(Number(id))?.name || ""}
+            </Text>
+            {findPracticeById(Number(id)) && (
+              <AddProgramToPractice practice={findPracticeById(Number(id))!} />
+            )}
+          </>
         )}
       />
     </View>
