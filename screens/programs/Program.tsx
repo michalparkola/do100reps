@@ -1,5 +1,12 @@
-import React from "react";
-import { View, ScrollView, Text, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  ScrollView,
+  Text,
+  FlatList,
+  TextInput,
+  Pressable,
+} from "react-native";
 
 import { useProgram } from "@/hooks/useProgram";
 import { useReps } from "@/hooks/useReps";
@@ -9,9 +16,10 @@ import { gs } from "@/global-styles";
 
 import RepCard from "../reps/RepCard";
 import { ConnectRepToActivityModal } from "./ConnectRepToActivityModal";
+import { useUpdateProgram } from "./useUpdateProgram";
 
 interface ProgramProps {
-  programId: string;
+  programId: number;
 }
 
 export default function Program({ programId }: ProgramProps) {
@@ -19,13 +27,28 @@ export default function Program({ programId }: ProgramProps) {
     isPending: isPendingProgram,
     error: errorProgram,
     data: program,
-  } = useProgram(programId);
+  } = useProgram(String(programId));
 
   const {
     isPending: isPendingReps,
     error: errorReps,
     data: reps,
   } = useReps(String(program?.practice ?? ""));
+
+  const updateProgramMutation = useUpdateProgram(programId);
+
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+
+  const [title, setTitle] = useState(program?.title ?? "");
+  const [description, setDescription] = useState(program?.description ?? "");
+
+  useEffect(() => {
+    if (program) {
+      setTitle(program.title);
+      setDescription(program.description ?? "");
+    }
+  }, [program]);
 
   if (isPendingProgram || isPendingReps) return <Text>Loading ...</Text>;
   if (errorProgram || errorReps) return <Text>Error ...</Text>;
@@ -34,12 +57,113 @@ export default function Program({ programId }: ProgramProps) {
     return reps?.find((rep) => rep.id === id);
   }
 
+  function handleSaveProgram() {
+    updateProgramMutation.mutate(
+      { new_title: title, new_description: description },
+      {
+        onSuccess: () => {
+          setIsEditingTitle(false);
+          setIsEditingTitle(false);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      }
+    );
+  }
+
   return (
     <ScrollView style={{ marginHorizontal: 12 }}>
       <Text style={gs.h2}>Program Title</Text>
-      <Text style={{ margin: 12 }}>{program.title}</Text>
+      {isEditingTitle ? (
+        <View style={{ backgroundColor: "white", padding: 5 }}>
+          <TextInput
+            style={{ borderWidth: 1, padding: 8 }}
+            value={title}
+            onChangeText={setTitle}
+          />
+          <View
+            style={{
+              marginTop: 12,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text
+              onPress={() => {
+                setIsEditingTitle(false);
+                setTitle(program.title);
+                setDescription(program.description ?? "");
+              }}
+            >
+              Cancel
+            </Text>
+            <Pressable
+              onPress={() => {
+                handleSaveProgram();
+                setIsEditingTitle(false);
+              }}
+              style={[gs.button, { height: 24 }]}
+            >
+              <Text>Save</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : (
+        <Text
+          style={{ margin: 12 }}
+          onPress={() => {
+            setIsEditingTitle(true);
+          }}
+        >
+          {program.title}
+        </Text>
+      )}
       <Text style={gs.h2}>Description</Text>
-      <Text style={{ margin: 12 }}>{program.description}</Text>
+      {isEditingDescription ? (
+        <View style={{ backgroundColor: "white", padding: 5 }}>
+          <TextInput
+            style={{ borderWidth: 1, padding: 8 }}
+            value={description}
+            onChangeText={setDescription}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 12,
+            }}
+          >
+            <Text
+              onPress={() => {
+                setIsEditingDescription(false);
+                setTitle(program.title);
+                setDescription(program.description ?? "");
+              }}
+            >
+              Cancel
+            </Text>
+            <Pressable
+              onPress={() => {
+                handleSaveProgram();
+                setIsEditingDescription(false);
+              }}
+              style={[gs.button, { height: 24 }]}
+            >
+              <Text>Save</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : (
+        <Text
+          style={{ margin: 12 }}
+          onPress={() => {
+            setIsEditingDescription(true);
+          }}
+        >
+          {program.description}
+        </Text>
+      )}
       <Text style={gs.h2}>Activities</Text>
       <View style={{ flexGrow: 0 }}>
         <FlatList

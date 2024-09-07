@@ -269,3 +269,26 @@ export async function addProgramToPractice(
     throw new Error(addProgramError.message);
   }
 }
+
+export async function updateProgram(
+  program_id: number,
+  new_title: string,
+  new_description: string,
+) {
+  console.log(new_title, new_description);
+
+  if (!new_title && !new_description) {
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("Programs")
+    .update({ title: new_title, description: new_description })
+    .eq("id", program_id);
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
+  }
+}
