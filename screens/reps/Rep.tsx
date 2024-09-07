@@ -135,20 +135,48 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
             renderItem={({ item }) => (
               <View style={gs.noteContainer}>
                 {editingNoteId === item.id ? (
-                  <TextInput
-                    style={{ margin: 12, padding: 6 }}
-                    value={editedNoteText}
-                    onChangeText={setEditedNoteText}
-                    onSubmitEditing={() => {
-                      updateNoteMutation.mutate({
-                        note_id: item.id.toString(),
-                        newText: editedNoteText,
-                      });
-                      setEditingNoteId(null);
-                    }}
-                    onBlur={() => setEditingNoteId(null)}
-                    autoFocus
-                  />
+                  <>
+                    <TextInput
+                      style={{ padding: 5 }}
+                      value={editedNoteText}
+                      onChangeText={setEditedNoteText}
+                      onSubmitEditing={() => {
+                        updateNoteMutation.mutate({
+                          note_id: item.id.toString(),
+                          newText: editedNoteText,
+                        });
+                        setEditingNoteId(null);
+                      }}
+                      autoFocus
+                    />
+                    <View
+                      style={{
+                        marginTop: 12,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text
+                        onPress={() => {
+                          setEditingNoteId(null);
+                        }}
+                      >
+                        Cancel
+                      </Text>
+                      <Pressable
+                        onPress={() => {
+                          updateNoteMutation.mutate({
+                            note_id: item.id.toString(),
+                            newText: editedNoteText,
+                          });
+                          setEditingNoteId(null);
+                        }}
+                        style={[gs.button, { height: 24 }]}
+                      >
+                        <Text>Save</Text>
+                      </Pressable>
+                    </View>
+                  </>
                 ) : (
                   <Pressable
                     onPress={() => {
@@ -156,8 +184,9 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
                       setEditedNoteText(item.text);
                     }}
                   >
-                    <Text style={{ marginVertical: 12 }}>
-                      {item.modified_at.substring(0, 10)} {item.text}
+                    <Text style={{ marginVertical: 12 }}>{item.text}</Text>
+                    <Text style={gs.repSecondaryText}>
+                      {item.modified_at.substring(0, 10)}
                     </Text>
                   </Pressable>
                 )}
