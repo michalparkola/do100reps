@@ -13,7 +13,7 @@ export type Database = {
         Row: {
           description: string | null;
           id: number;
-          program: number;
+          program_id: number;
           related_reps: number[] | null;
           title: string;
           user_id: string;
@@ -21,7 +21,7 @@ export type Database = {
         Insert: {
           description?: string | null;
           id?: number;
-          program: number;
+          program_id: number;
           related_reps?: number[] | null;
           title: string;
           user_id?: string;
@@ -29,7 +29,7 @@ export type Database = {
         Update: {
           description?: string | null;
           id?: number;
-          program?: number;
+          program_id?: number;
           related_reps?: number[] | null;
           title?: string;
           user_id?: string;
@@ -37,7 +37,7 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "Activities_program_fkey";
-            columns: ["program"];
+            columns: ["program_id"];
             isOneToOne: false;
             referencedRelation: "Programs";
             referencedColumns: ["id"];

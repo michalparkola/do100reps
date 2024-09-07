@@ -17,6 +17,7 @@ import { gs } from "@/global-styles";
 import RepCard from "../reps/RepCard";
 import { ConnectRepToActivityModal } from "./ConnectRepToActivityModal";
 import { useUpdateProgram } from "./useUpdateProgram";
+import { AddActivity } from "./AddActivity";
 
 interface ProgramProps {
   programId: number;
@@ -206,6 +207,7 @@ export default function Program({ programId }: ProgramProps) {
           )}
         />
       </View>
+      <AddActivity program_id={programId} />
     </ScrollView>
   );
 }

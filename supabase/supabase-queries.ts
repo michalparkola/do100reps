@@ -292,3 +292,25 @@ export async function updateProgram(
     return data;
   }
 }
+
+export async function addActivity(
+  program_id: number,
+  program_title: string,
+  program_description: string,
+) {
+  if (program_title === "") {
+    throw new Error("Can't create activity without a title.");
+  }
+
+  const { error: addProgramError } = await supabase
+    .from("Activities")
+    .insert({
+      title: program_title,
+      description: program_description,
+      program_id: program_id,
+    });
+
+  if (addProgramError) {
+    throw new Error(addProgramError.message);
+  }
+}
