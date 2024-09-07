@@ -123,9 +123,11 @@ export default function Program({ programId }: ProgramProps) {
       {isEditingDescription ? (
         <View style={{ backgroundColor: "white", padding: 5 }}>
           <TextInput
-            style={{ borderWidth: 1, padding: 8 }}
+            style={{ borderWidth: 1, padding: 8, height: 250 }}
             value={description}
             onChangeText={setDescription}
+            autoFocus={true}
+            multiline={true}
           />
           <View
             style={{
