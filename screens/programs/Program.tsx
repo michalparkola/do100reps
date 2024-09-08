@@ -18,6 +18,7 @@ import RepCard from "../reps/RepCard";
 import { ConnectRepToActivityModal } from "./ConnectRepToActivityModal";
 import { useUpdateProgram } from "./useUpdateProgram";
 import { AddActivity } from "./AddActivity";
+import { EditableActivityCard } from "./EditableActivityCard";
 
 interface ProgramProps {
   programId: number;
@@ -174,10 +175,7 @@ export default function Program({ programId }: ProgramProps) {
           data={program.activities}
           renderItem={({ item }) => (
             <>
-              <View style={gs.activityContainer}>
-                <Text style={{ marginVertical: 12 }}>{item.title}</Text>
-                <Text style={{ marginVertical: 12 }}>{item.description}</Text>
-              </View>
+              <EditableActivityCard activity={item} />
               <FlatList
                 style={{ marginLeft: 12 }}
                 data={item.related_reps}

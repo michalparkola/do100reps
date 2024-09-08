@@ -314,3 +314,24 @@ export async function addActivity(
     throw new Error(addProgramError.message);
   }
 }
+
+export async function updateActivity(
+  activity_id: number,
+  activity_title: string,
+  activity_description: string,
+) {
+  if (activity_title === "") {
+    throw new Error("Can't save activity without a title.");
+  }
+
+  const { error } = await supabase
+    .from("Activities")
+    .update({
+      title: activity_title,
+      description: activity_description,
+    }).eq("id", activity_id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
