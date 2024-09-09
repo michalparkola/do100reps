@@ -1,6 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import { Text, TextInput, Pressable, FlatList, View } from "react-native";
+import {
+  Text,
+  TextInput,
+  Pressable,
+  FlatList,
+  View,
+  ScrollView,
+} from "react-native";
 
 import { Calendar, DateData } from "react-native-calendars";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -52,7 +59,7 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
   if (errorNotes) return <Text>Error loading notes: {errorNotes.message}</Text>;
 
   return (
-    <>
+    <ScrollView>
       {isEditingDate ? (
         <>
           <Calendar
@@ -197,6 +204,6 @@ export default function Rep({ rep, handleRepChange }: RepViewProps) {
       )}
 
       <AddRepNote rep_id={rep.id} />
-    </>
+    </ScrollView>
   );
 }
