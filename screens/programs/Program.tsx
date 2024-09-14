@@ -6,6 +6,7 @@ import {
   FlatList,
   TextInput,
   Pressable,
+  Switch,
 } from "react-native";
 
 import { useProgram } from "@/hooks/useProgram";
@@ -44,11 +45,13 @@ export default function Program({ programId }: ProgramProps) {
 
   const [title, setTitle] = useState(program?.title ?? "");
   const [description, setDescription] = useState(program?.description ?? "");
+  const [isShelved, setIsShelved] = useState(program?.is_shelved ?? false);
 
   useEffect(() => {
     if (program) {
       setTitle(program.title);
       setDescription(program.description ?? "");
+      setIsShelved(program.is_shelved ?? false);
     }
   }, [program]);
 
@@ -61,11 +64,33 @@ export default function Program({ programId }: ProgramProps) {
 
   function handleSaveProgram() {
     updateProgramMutation.mutate(
-      { new_title: title, new_description: description },
+      {
+        new_title: title,
+        new_description: description,
+        new_is_shelved: isShelved,
+      },
       {
         onSuccess: () => {
           setIsEditingTitle(false);
-          setIsEditingTitle(false);
+          setIsEditingDescription(false);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      }
+    );
+  }
+
+  function handleIsShelvedSwitch(switch_value: boolean) {
+    updateProgramMutation.mutate(
+      {
+        new_title: title,
+        new_description: description,
+        new_is_shelved: switch_value,
+      },
+      {
+        onSuccess: () => {
+          setIsShelved(switch_value);
         },
         onError: (error) => {
           console.error(error);
@@ -168,6 +193,15 @@ export default function Program({ programId }: ProgramProps) {
           {program.description}
         </Text>
       )}
+      <Text style={gs.h2}>Shelved</Text>
+      <Switch
+        style={{ margin: 12 }}
+        value={isShelved}
+        onValueChange={(value) => {
+          console.log("Swith: ", value);
+          handleIsShelvedSwitch(value);
+        }}
+      />
       <Text style={gs.h2}>Activities</Text>
       <View style={{ flexGrow: 0 }}>
         <FlatList

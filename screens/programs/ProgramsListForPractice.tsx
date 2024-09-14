@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, Switch, StyleSheet } from "react-native";
+import { View, Text, FlatList, Switch } from "react-native";
 import { Link } from "expo-router";
 import { usePrograms } from "@/hooks/usePrograms";
 import { Tables } from "@/supabase/database.types";
+import { gs } from "@/global-styles";
 
 interface Props {
   practice_id: number;
@@ -49,7 +50,9 @@ export default function ProgramsListForPractice({ practice_id }: Props) {
         <FlatList
           data={programsToShow}
           renderItem={({ item }: { item: Tables<"Programs"> }) => (
-            <View style={styles.card}>
+            <View
+              style={item.is_shelved ? gs.shelvedContainer : gs.itemContainer}
+            >
               <View style={{ marginLeft: 10, flex: 1 }}>
                 <Link href={"/program/" + item.id}>
                   <Text style={{ marginBottom: 5 }}>{item.title}</Text>
@@ -64,23 +67,3 @@ export default function ProgramsListForPractice({ practice_id }: Props) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-    width: "100%",
-  },
-  horizontalRule: {
-    height: 1,
-    backgroundColor: "#D3D3D3",
-    marginVertical: 5,
-  },
-});

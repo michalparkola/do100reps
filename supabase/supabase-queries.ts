@@ -274,8 +274,9 @@ export async function updateProgram(
   program_id: number,
   new_title: string,
   new_description: string,
+  new_is_shelved: boolean,
 ) {
-  console.log(new_title, new_description);
+  console.log("Supabase query: ", new_title, new_description, new_is_shelved);
 
   if (!new_title && !new_description) {
     return;
@@ -283,7 +284,11 @@ export async function updateProgram(
 
   const { data, error } = await supabase
     .from("Programs")
-    .update({ title: new_title, description: new_description })
+    .update({
+      title: new_title,
+      description: new_description,
+      is_shelved: new_is_shelved,
+    })
     .eq("id", program_id);
 
   if (error) {
