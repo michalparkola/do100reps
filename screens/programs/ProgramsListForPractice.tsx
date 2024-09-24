@@ -36,7 +36,7 @@ export default function ProgramsListForPractice({ practice_id }: Props) {
         Learn just enough to do something interesting by following PROGRAMS:
       </Text>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 12 }}>
-        <Text>Also show shelved programs:</Text>
+        <Text>Show shelved programs:</Text>
         <Switch
           style={{ marginLeft: 12 }}
           trackColor={{ false: "#767577", true: "#81b0ff" }}

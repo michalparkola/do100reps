@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, SectionList, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, SectionList, StyleSheet, Switch } from "react-native";
 import { Link } from "expo-router";
 
 import { Tables } from "@/supabase/database.types";
@@ -23,14 +23,28 @@ export default function PracticeList() {
     error: errorPractices,
     data: practices,
   } = usePractices();
+  const [showShelved, setShowShelved] = useState(false);
 
   if (isPendingPractices) return <Text>Loading...</Text>;
   if (errorPractices) return <Text>Error!</Text>;
 
-  const categories = groupPracticesByCategory(practices ?? []);
+  const filteredPractices =
+    practices?.filter((practice) => showShelved || !practice.is_shelved) ?? [];
+  const categories = groupPracticesByCategory(filteredPractices);
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", margin: 12 }}>
+        <Text>Show shelved recipes:</Text>
+        <Switch
+          style={{ marginLeft: 12 }}
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={showShelved ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={setShowShelved}
+          value={showShelved}
+        />
+      </View>
       <SectionList
         style={{ marginLeft: 12, marginRight: 12, marginTop: 12 }}
         sections={categories}
@@ -81,5 +95,11 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 3 },
     width: "100%",
+  },
+  toggleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 12,
   },
 });

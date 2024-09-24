@@ -102,6 +102,7 @@ export type Database = {
           id: number;
           name: string;
           user_id: string;
+          is_shelved: boolean;
         };
         Insert: {
           category?: string | null;
@@ -110,6 +111,7 @@ export type Database = {
           id?: number;
           name: string;
           user_id?: string;
+          is_shelved: boolean;
         };
         Update: {
           category?: string | null;
@@ -118,6 +120,7 @@ export type Database = {
           id?: number;
           name?: string;
           user_id?: string;
+          is_shelved: boolean;
         };
         Relationships: [];
       };

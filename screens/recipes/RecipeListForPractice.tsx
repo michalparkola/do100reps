@@ -44,7 +44,7 @@ export default function RecipeListForPractice({ practice_title }: Props) {
         Apply ideas from RECIPES to your next rep:
       </Text>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 12 }}>
-        <Text>Also show shelved recipes:</Text>
+        <Text>Show shelved recipes:</Text>
         <Switch
           style={{ marginLeft: 12 }}
           trackColor={{ false: "#767577", true: "#81b0ff" }}
