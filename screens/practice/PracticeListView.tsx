@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, SectionList, StyleSheet, Switch } from "react-native";
+import { View, Text, SectionList, Switch } from "react-native";
 import { Link } from "expo-router";
 
 import { Tables } from "@/supabase/database.types";
 import PracticeGrid from "@/screens/practice/PracticeGrid";
 import { AddPractice } from "./AddPractice";
 import { usePractices } from "@/hooks/usePractices";
+
+import { gs } from "@/global-styles";
 
 function groupPracticesByCategory(practices: Tables<"Practices">[]) {
   return Object.entries(
@@ -18,12 +20,13 @@ function groupPracticesByCategory(practices: Tables<"Practices">[]) {
 }
 
 export default function PracticeList() {
+  const [showShelved, setShowShelved] = useState(false);
+
   const {
     isPending: isPendingPractices,
     error: errorPractices,
     data: practices,
   } = usePractices();
-  const [showShelved, setShowShelved] = useState(false);
 
   if (isPendingPractices) return <Text>Loading...</Text>;
   if (errorPractices) return <Text>Error!</Text>;
@@ -51,7 +54,9 @@ export default function PracticeList() {
         keyExtractor={(item) => item.do100reps_title ?? "No title"}
         renderItem={({ item }) => (
           <Link href={"/practice/" + item.id}>
-            <View style={styles.card}>
+            <View
+              style={item.is_shelved ? gs.shelvedContainer : gs.itemContainer}
+            >
               <View style={{ marginRight: 5 }}>
                 <PracticeGrid nextRep={item.do100reps_count + 1} size={9} />
               </View>
@@ -83,23 +88,3 @@ export default function PracticeList() {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    backgroundColor: "#FFF",
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-    width: "100%",
-  },
-  toggleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 12,
-  },
-});

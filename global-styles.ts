@@ -91,6 +91,7 @@ export const gs = StyleSheet.create({
   },
 
   itemContainer: {
+    flexDirection: "row",
     backgroundColor: "#FFF",
     borderRadius: 10,
     padding: 12,
@@ -99,9 +100,11 @@ export const gs = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 3 },
+    width: "100%",
   },
 
   shelvedContainer: {
+    flexDirection: "row",
     backgroundColor: "#e6e6e6",
     borderRadius: 10,
     padding: 12,
@@ -110,6 +113,7 @@ export const gs = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 3 },
+    width: "100%",
   },
 
   activityContainer: {
