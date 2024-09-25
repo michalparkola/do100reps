@@ -11,6 +11,7 @@ export function useUpdateRecipe(nugget_id: number) {
         queryKey: ["nugget", nugget_id],
       });
       queryClient.invalidateQueries({ queryKey: ["nuggets"] });
+      queryClient.invalidateQueries({ queryKey: ["nugget", nugget_id] });
     },
   });
 }
