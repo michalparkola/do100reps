@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { getSupabasePracticeById } from "../supabase/supabase-queries";
+import { getSupabasePracticeById } from "../../supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
 
 export function usePractice(

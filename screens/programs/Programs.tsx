@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 import { Tables } from "@/supabase/database.types";
 
 import { usePrograms } from "@/hooks/usePrograms";
-import { usePractices } from "@/hooks/usePractices";
+import { usePractices } from "@/screens/practice/usePractices";
 import { AddProgramToPractice } from "./AddProgram";
 
 function groupProgramsByPractice(programs: Tables<"Programs">[]) {

@@ -5,7 +5,7 @@ import { Link } from "expo-router";
 import { Tables } from "@/supabase/database.types";
 import PracticeGrid from "@/screens/practice/PracticeGrid";
 import { AddPractice } from "./AddPractice";
-import { usePractices } from "@/hooks/usePractices";
+import { usePractices } from "@/screens/practice/usePractices";
 
 import { gs } from "@/global-styles";
 

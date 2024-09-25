@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Text, TextInput, Pressable } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { savePracticeTitle } from "@/supabase/supabase-queries";
-import { usePractice } from "@/hooks/usePractice";
+import { usePractice } from "./usePractice";
 import { gs } from "@/global-styles";
 
 interface Props {

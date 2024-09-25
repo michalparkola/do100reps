@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import {
   getSupabaseUserId,
   getSupabasePractices,
-} from "../supabase/supabase-queries";
+} from "../../supabase/supabase-queries";
 import { Tables } from "@/supabase/database.types";
 
 export function usePractices(): UseQueryResult<Tables<"Practices">[]> {
