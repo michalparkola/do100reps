@@ -12,7 +12,7 @@ import RepCard from "../reps/RepCard";
 import RecipeListForPractice from "@/screens/recipes/RecipeListForPractice";
 import { AddRecipeToPractice } from "../recipes/AddRecipe";
 import ProgramsListForPractice from "../programs/ProgramsListForPractice";
-
+import { AddProgramToPractice } from "../programs/AddProgram";
 import { gs } from "@/global-styles";
 
 interface Props {
@@ -83,6 +83,7 @@ export default function PracticeView({ practiceId }: Props) {
           />
           <PracticeProgress completed_reps_count={reps.length} />
           <ProgramsListForPractice practice_id={practice.id} />
+          <AddProgramToPractice practice={practice} />
           <RecipeListForPractice practice_title={practice.name} />
           <AddRecipeToPractice add_to_practice={practice} />
           <NextRep practice_id={practiceId} next_rep_cnt={reps.length + 1} />

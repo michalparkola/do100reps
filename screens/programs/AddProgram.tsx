@@ -81,7 +81,7 @@ export function AddProgramToPractice({ practice }: Props) {
       </Modal>
       <View style={{ margin: 12, width: 150 }}>
         <Pressable
-          style={gs.button}
+          style={gs.smallButton}
           onPress={() => {
             setModalVisible(true);
           }}
