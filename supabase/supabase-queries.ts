@@ -39,11 +39,15 @@ export async function getSupabasePracticeById(practiceid: string) {
   }
 }
 
-export async function savePracticeTitle(id: string, title: string) {
+// TODO use general updatePractice??
+export async function savePracticeTitle(
+  practice_id: string,
+  new_title: string,
+) {
   await supabase
     .from("Practices")
-    .update({ do100reps_title: title })
-    .eq("id", id);
+    .update({ do100reps_title: new_title })
+    .eq("id", practice_id);
 }
 
 export async function getSupabaseRepsByPracticeId(practiceId: string) {
@@ -338,5 +342,29 @@ export async function updateActivity(
 
   if (error) {
     throw new Error(error.message);
+  }
+}
+
+export async function updatePractice(
+  practice_id: number,
+  new_title: string,
+  new_is_shelved: boolean,
+) {
+  if (!new_title) {
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("Practices")
+    .update({
+      do100reps_title: new_title,
+      is_shelved: new_is_shelved,
+    })
+    .eq("id", practice_id);
+
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return data;
   }
 }
