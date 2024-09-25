@@ -101,7 +101,7 @@ export default function Program({ programId }: ProgramProps) {
 
   return (
     <ScrollView style={{ marginHorizontal: 12 }}>
-      <Text style={gs.h2}>Program Title</Text>
+      <Text style={gs.label}>Program Title</Text>
       {isEditingTitle ? (
         <View style={{ backgroundColor: "white", padding: 5 }}>
           <TextInput
@@ -146,7 +146,7 @@ export default function Program({ programId }: ProgramProps) {
           {program.title}
         </Text>
       )}
-      <Text style={gs.h2}>Description</Text>
+      <Text style={gs.label}>Description</Text>
       {isEditingDescription ? (
         <View style={{ backgroundColor: "white", padding: 5 }}>
           <TextInput
@@ -193,7 +193,7 @@ export default function Program({ programId }: ProgramProps) {
           {program.description}
         </Text>
       )}
-      <Text style={gs.h2}>Shelved</Text>
+      <Text style={gs.label}>Shelved</Text>
       <Switch
         style={{ margin: 12 }}
         value={isShelved}
@@ -202,7 +202,7 @@ export default function Program({ programId }: ProgramProps) {
           handleIsShelvedSwitch(value);
         }}
       />
-      <Text style={gs.h2}>Activities</Text>
+      <Text style={gs.label}>Activities</Text>
       <View style={{ flexGrow: 0 }}>
         <FlatList
           style={{ margin: 12 }}
