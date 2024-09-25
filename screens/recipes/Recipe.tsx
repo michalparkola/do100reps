@@ -1,10 +1,10 @@
 import React from "react";
 import { View, ScrollView, Text } from "react-native";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getNugget, updateNugget } from "@/supabase/supabase-queries";
+import { useQuery } from "@tanstack/react-query";
+import { useUpdateRecipe } from "./useUpdateRecipe";
+import { getNugget } from "@/supabase/supabase-queries";
 import { gs } from "@/global-styles";
 import EditableTextInputWithCancelSave from "@/components/EditableTextInputWithCancelSave";
-import { Tables } from "@/supabase/database.types";
 import EditableTODOSwitch from "@/components/EditableTODOSwitch";
 
 interface Props {
@@ -12,8 +12,6 @@ interface Props {
 }
 
 export default function Recipe({ nugget_id }: Props) {
-  const queryClient = useQueryClient();
-
   // Query: nugget_id
   const {
     data: nugget,
@@ -24,13 +22,7 @@ export default function Recipe({ nugget_id }: Props) {
     queryKey: ["nugget", nugget_id],
   });
 
-  const updateNuggetMutation = useMutation({
-    mutationFn: (new_nugget: Tables<"Nuggets">) => updateNugget(new_nugget),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["nugget", nugget_id] });
-      queryClient.invalidateQueries({ queryKey: ["nuggets"] });
-    },
-  });
+  const updateNuggetMutation = useUpdateRecipe(Number(nugget_id));
 
   if (isPending) return <Text>Loading recipe...</Text>;
   if (error)
@@ -41,6 +33,7 @@ export default function Recipe({ nugget_id }: Props) {
     );
   return (
     <ScrollView contentContainerStyle={{ margin: 12 }}>
+      <Text style={gs.label}>Shelved</Text>
       <EditableTODOSwitch
         is_todo={nugget.is_todo}
         handleToggle={() => {
