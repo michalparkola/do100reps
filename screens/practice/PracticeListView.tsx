@@ -38,7 +38,7 @@ export default function PracticeList() {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: "row", alignItems: "center", margin: 12 }}>
-        <Text>Show shelved recipes:</Text>
+        <Text>Show shelved practices:</Text>
         <Switch
           style={{ marginLeft: 12 }}
           trackColor={{ false: "#767577", true: "#81b0ff" }}
