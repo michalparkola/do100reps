@@ -1,7 +1,8 @@
-import { Text } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import { supabase } from "@/supabase/supabase-client";
-import { getSupabasePracticeById } from "@/supabase/supabase-queries";
+import { getSupabasePracticeById, getSupabaseRepsByPracticeId } from "@/supabase/supabase-queries";
 import { useQuery } from "@tanstack/react-query";
+import { gs } from "@/global-styles";
 
 interface Props {
   practiceId: string;
@@ -21,13 +22,25 @@ export default function Next({ practiceId }: Props) {
     queryFn: () => getSupabasePracticeById(practiceId),
   });
 
+  const {
+    isPending: isPendingReps,
+    error: errorReps,
+    data: reps,
+  } = useQuery({
+    queryKey: ["reps", practiceId],
+    queryFn: () => getSupabaseRepsByPracticeId(practiceId),
+    enabled: !!practice,
+  });
+
   async function getAiSuggestion(practiceId: string) {
     const { data, error } = await supabase.functions.invoke("openai", {
       body: {
         query:
           "Given my goal is to " +
           practice?.do100reps_title +
-          "What are three things I might want to do next?",
+          " and my previous reps are: " +
+          (reps?.map(rep => rep.summary).join(", ") || "none yet") +
+          ". What are three things I might want to do next?",
       },
     });
 
@@ -45,7 +58,7 @@ export default function Next({ practiceId }: Props) {
   } = useQuery({
     queryKey: ["ai_suggestion", practiceId],
     queryFn: () => getAiSuggestion(practiceId),
-    enabled: !!practice,
+    enabled: !!practice && !!reps,
   });
 
   if (isPendingPractice || errorPractice)
@@ -54,8 +67,7 @@ export default function Next({ practiceId }: Props) {
   return (
     <>
       <Text style={{ margin: 12 }}>
-        Given my goal is to {practice.do100reps_title} What are three things I
-        might want to do next?"
+        Given my goal is to {practice.do100reps_title} and my previous reps are: {reps?.map(rep => rep.summary).join(", ") || "none yet"}. What are three things I might want to do next?
       </Text>
       <Text style={{ margin: 12 }}>{ai_suggestion}</Text>
     </>
